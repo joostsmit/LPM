@@ -203,25 +203,23 @@
   .card-meta { font-size: 11px; color: var(--text-dim); }
   .card-actions { display: flex; gap: 6px; }
 
-  .note-icon { cursor: default; position: relative; }
-  .note-icon:hover .tooltip { opacity: 1; pointer-events: auto; }
-  .tooltip {
-    position: absolute;
-    bottom: calc(100% + 6px);
-    right: 0;
+  .note-icon { cursor: default; }
+  #global-tooltip {
+    position: fixed;
     background: var(--surface3);
     border: 1px solid var(--border);
     border-radius: var(--radius-sm);
     padding: 8px 12px;
     font-size: 12px;
     color: var(--text);
-    width: 220px;
+    max-width: 260px;
     line-height: 1.5;
-    opacity: 0;
-    pointer-events: none;
-    transition: opacity 0.15s;
-    z-index: 50;
+    z-index: 9999;
     box-shadow: var(--shadow);
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.15s;
+    word-break: break-word;
   }
 
   /* ─── TABLE ─── */
@@ -737,6 +735,8 @@
   </div>
 </div>
 
+<div id="global-tooltip"></div>
+
 <!-- MODAL: PIN / Wachtwoord -->
 <div class="modal-overlay" id="pin-modal">
   <div class="modal" style="max-width:320px;text-align:center;">
@@ -886,7 +886,7 @@ function renderCards() {
   grid.innerHTML = filtered.map(i => {
     const wsjf = calcWsjf(i.wsjf);
     const noteHtml = i.notitie
-      ? `<span class="note-icon" style="position:relative">💬<span class="tooltip">${escHtml(i.notitie)}</span></span>`
+      ? `<span class="note-icon" data-note="${escHtml(i.notitie)}">💬</span>`
       : "";
     return `
     <div class="initiative-card">
@@ -941,7 +941,7 @@ function renderTable() {
 
   tbody.innerHTML = filtered.map(i => {
     const wsjf = calcWsjf(i.wsjf);
-    const noteHtml = i.notitie ? `<span style="position:relative" class="note-icon">💬<span class="tooltip">${escHtml(i.notitie)}</span></span>` : "";
+    const noteHtml = i.notitie ? `<span class="note-icon" data-note="${escHtml(i.notitie)}">💬</span>` : "";
     return `
     <tr>
       <td><div class="td-name">${escHtml(i.naam)} ${noteHtml}</div></td>
@@ -1395,6 +1395,36 @@ document.addEventListener("keydown", function(e) {
   else if (e.key === "Backspace") pinClear();
   else if (e.key === "Escape") closePinModal();
 });
+
+// ─── GLOBAL TOOLTIP ──────────────────────────────────────────────────
+const gtt = document.getElementById("global-tooltip");
+document.addEventListener("mouseover", function(e) {
+  const icon = e.target.closest(".note-icon[data-note]");
+  if (!icon) return;
+  gtt.textContent = icon.dataset.note;
+  gtt.style.opacity = "1";
+  positionTooltip(icon);
+});
+document.addEventListener("mouseout", function(e) {
+  if (!e.target.closest(".note-icon[data-note]")) return;
+  gtt.style.opacity = "0";
+});
+document.addEventListener("mousemove", function(e) {
+  if (gtt.style.opacity !== "1") return;
+  const icon = e.target.closest(".note-icon[data-note]");
+  if (icon) positionTooltip(icon);
+});
+function positionTooltip(icon) {
+  const r = icon.getBoundingClientRect();
+  const tw = gtt.offsetWidth, th = gtt.offsetHeight;
+  let top = r.top - th - 8;
+  let left = r.right - tw;
+  if (top < 8) top = r.bottom + 8;
+  if (left < 8) left = 8;
+  if (left + tw > window.innerWidth - 8) left = window.innerWidth - tw - 8;
+  gtt.style.top = top + "px";
+  gtt.style.left = left + "px";
+}
 
 // ─── INIT ─────────────────────────────────────────────────────────────
 // Load demo data
