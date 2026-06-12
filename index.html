@@ -160,10 +160,7 @@
   }
   .initiative-card:hover { border-color: var(--border); transform: translateY(-1px); box-shadow: var(--shadow); }
 
-  .card-priority-bar { width: 4px; flex-shrink: 0; }
-  .priority-hoog .card-priority-bar { background: var(--red); }
-  .priority-midden .card-priority-bar { background: var(--orange); }
-  .priority-laag .card-priority-bar { background: var(--green); }
+  .card-accent-bar { width: 4px; flex-shrink: 0; background: var(--accent); }
 
   .card-body { padding: 16px; flex: 1; min-width: 0; }
   .card-header { display: flex; align-items: flex-start; justify-content: space-between; gap: 8px; margin-bottom: 6px; }
@@ -255,10 +252,6 @@
   tbody tr:hover { background: var(--surface2); }
   tbody td { padding: 12px 14px; font-size: 13px; }
   .td-name { font-weight: 500; display: flex; align-items: center; gap: 8px; }
-  .priority-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
-  .dot-hoog { background: var(--red); }
-  .dot-midden { background: var(--orange); }
-  .dot-laag { background: var(--green); }
   .wsjf-mono { font-family: 'DM Mono', monospace; color: var(--accent); font-weight: 500; }
 
   /* ─── BEHEER PANEL ─── */
@@ -493,7 +486,7 @@
 <div class="main">
 
   <!-- STATS BAR -->
-  <div class="stats-bar">
+  <div class="stats-bar" style="grid-template-columns: repeat(3, 1fr);">
     <div class="stat-card">
       <div class="stat-label">Totaal initiatieven</div>
       <div class="stat-value" id="stat-totaal">0</div>
@@ -501,10 +494,6 @@
     <div class="stat-card">
       <div class="stat-label">In uitvoering</div>
       <div class="stat-value green" id="stat-actief">0</div>
-    </div>
-    <div class="stat-card">
-      <div class="stat-label">Prioriteit Hoog</div>
-      <div class="stat-value red" id="stat-hoog">0</div>
     </div>
     <div class="stat-card">
       <div class="stat-label">Hoogste WSJF</div>
@@ -521,15 +510,6 @@
     <div class="filter-group">
       <span class="filter-label">Thema</span>
       <div id="filter-thema"></div>
-    </div>
-    <div class="filter-group">
-      <span class="filter-label">Prioriteit</span>
-      <div id="filter-prioriteit">
-        <span class="filter-chip active" data-filter="prioriteit" data-value="Alle" onclick="toggleFilter(this,'prioriteit')">Alle</span>
-        <span class="filter-chip" data-filter="prioriteit" data-value="Hoog" onclick="toggleFilter(this,'prioriteit')">Hoog</span>
-        <span class="filter-chip" data-filter="prioriteit" data-value="Midden" onclick="toggleFilter(this,'prioriteit')">Midden</span>
-        <span class="filter-chip" data-filter="prioriteit" data-value="Laag" onclick="toggleFilter(this,'prioriteit')">Laag</span>
-      </div>
     </div>
     <div class="filter-group">
       <span class="filter-label">BU</span>
@@ -554,7 +534,6 @@
           <tr>
             <th onclick="sortTable('naam')" id="th-naam">Naam <span class="sort-icon" id="si-naam">↕</span></th>
             <th onclick="sortTable('status')" id="th-status">Status <span class="sort-icon" id="si-status">↕</span></th>
-            <th onclick="sortTable('prioriteit')" id="th-prioriteit">Prioriteit <span class="sort-icon" id="si-prioriteit">↕</span></th>
             <th onclick="sortTable('thema')" id="th-thema">Thema <span class="sort-icon" id="si-thema">↕</span></th>
             <th onclick="sortTable('business_unit')" id="th-business_unit">Business Unit <span class="sort-icon" id="si-business_unit">↕</span></th>
             <th onclick="sortTable('team')" id="th-team">Team <span class="sort-icon" id="si-team">↕</span></th>
@@ -612,14 +591,6 @@
               <option>Goedgekeurd</option>
               <option>Uitvoering</option>
               <option>Klaar</option>
-            </select>
-          </div>
-          <div class="form-group">
-            <label for="f-prioriteit">Prioriteit</label>
-            <select id="f-prioriteit">
-              <option>Hoog</option>
-              <option>Midden</option>
-              <option>Laag</option>
             </select>
           </div>
           <div class="form-group">
@@ -731,7 +702,7 @@ const FIBONACCI = [1, 2, 3, 5, 8, 13, 21];
 const BUSINESS_UNITS = ["Energie uit Afval", "GGC", "Digitalisering"];
 let wsjfState = { bv: 5, tc: 5, rr: 5, js: 5 };
 
-let filters = { status: "Alle", thema: "Alle", prioriteit: "Alle", bu: "Alle" };
+let filters = { status: "Alle", thema: "Alle", bu: "Alle" };
 let sortCol = "wsjf";
 let sortDir = "desc";
 let currentView = "kaart";
@@ -758,10 +729,6 @@ function renderFilters() {
     `<span class="filter-chip ${filters.thema === t ? 'active' : ''}" data-filter="thema" data-value="${t}" onclick="toggleFilter(this,'thema')">${t}</span>`
   ).join('');
 
-  document.querySelectorAll('[data-filter="prioriteit"]').forEach(el => {
-    el.classList.toggle('active', el.dataset.value === filters.prioriteit);
-  });
-
   const bus = ["Alle", ...BUSINESS_UNITS];
   document.getElementById("filter-bu").innerHTML = bus.map(b =>
     `<span class="filter-chip ${filters.bu === b ? 'active' : ''}" data-filter="bu" data-value="${b}" onclick="toggleFilter(this,'bu')">${b}</span>`
@@ -779,7 +746,6 @@ function getFiltered() {
   return portfolio.initiatieven.filter(i => {
     if (filters.status !== "Alle" && i.status !== filters.status) return false;
     if (filters.thema !== "Alle" && i.thema !== filters.thema) return false;
-    if (filters.prioriteit !== "Alle" && i.prioriteit !== filters.prioriteit) return false;
     if (filters.bu !== "Alle" && (i.business_unit || "") !== filters.bu) return false;
     return true;
   });
@@ -802,7 +768,6 @@ function renderStats() {
   const filtered = getFiltered();
   document.getElementById("stat-totaal").textContent = filtered.length;
   document.getElementById("stat-actief").textContent = filtered.filter(i => i.status === "Uitvoering").length;
-  document.getElementById("stat-hoog").textContent = filtered.filter(i => i.prioriteit === "Hoog").length;
   const scores = filtered.map(i => calcWsjf(i.wsjf));
   document.getElementById("stat-wsjf").textContent = scores.length ? Math.max(...scores).toFixed(1) : "—";
 }
@@ -827,13 +792,12 @@ function renderCards() {
 
   grid.innerHTML = filtered.map(i => {
     const wsjf = calcWsjf(i.wsjf);
-    const priClass = "priority-" + i.prioriteit.toLowerCase();
     const noteHtml = i.notitie
       ? `<span class="note-icon" style="position:relative">💬<span class="tooltip">${escHtml(i.notitie)}</span></span>`
       : "";
     return `
-    <div class="initiative-card ${priClass}">
-      <div class="card-priority-bar"></div>
+    <div class="initiative-card">
+      <div class="card-accent-bar"></div>
       <div class="card-body">
         <div class="card-header">
           <div class="card-title">${escHtml(i.naam)} ${noteHtml}</div>
@@ -884,13 +848,11 @@ function renderTable() {
 
   tbody.innerHTML = filtered.map(i => {
     const wsjf = calcWsjf(i.wsjf);
-    const dotClass = "dot-" + i.prioriteit.toLowerCase();
     const noteHtml = i.notitie ? `<span style="position:relative" class="note-icon">💬<span class="tooltip">${escHtml(i.notitie)}</span></span>` : "";
     return `
     <tr>
-      <td><div class="td-name"><span class="priority-dot ${dotClass}"></span>${escHtml(i.naam)} ${noteHtml}</div></td>
+      <td><div class="td-name">${escHtml(i.naam)} ${noteHtml}</div></td>
       <td><span class="badge ${statusClass(i.status)}">${escHtml(i.status)}</span></td>
-      <td>${escHtml(i.prioriteit)}</td>
       <td><span class="badge badge-thema">${escHtml(i.thema || "")}</span></td>
       <td>${i.business_unit ? `<span class="badge badge-bu">${escHtml(i.business_unit)}</span>` : "—"}</td>
       <td>${escHtml(i.team || "—")}</td>
@@ -902,7 +864,7 @@ function renderTable() {
 function sortTable(col) {
   if (sortCol === col) { sortDir = sortDir === "asc" ? "desc" : "asc"; }
   else { sortCol = col; sortDir = col === "wsjf" ? "desc" : "asc"; }
-  ["naam","status","prioriteit","thema","business_unit","team","wsjf"].forEach(c => {
+  ["naam","status","thema","business_unit","team","wsjf"].forEach(c => {
     const th = document.getElementById("th-" + c);
     const si = document.getElementById("si-" + c);
     if (th) th.classList.toggle("sorted", c === sortCol);
@@ -951,7 +913,6 @@ function renderBeheerList() {
   list.innerHTML = portfolio.initiatieven.map(i => `
     <div class="beheer-item">
       <div class="beheer-item-info">
-        <span class="priority-dot dot-${i.prioriteit.toLowerCase()}"></span>
         <span class="beheer-item-name">${escHtml(i.naam)}</span>
         <span class="badge ${statusClass(i.status)}">${escHtml(i.status)}</span>
       </div>
@@ -978,7 +939,6 @@ function openForm(id) {
     document.getElementById("f-naam").value = "";
     document.getElementById("f-omschrijving").value = "";
     document.getElementById("f-status").value = "Idee";
-    document.getElementById("f-prioriteit").value = "Midden";
     document.getElementById("f-eigenaar").value = "";
     document.getElementById("f-bu").value = "";
     document.getElementById("f-team").value = "";
@@ -991,7 +951,6 @@ function openForm(id) {
     document.getElementById("f-naam").value = i.naam;
     document.getElementById("f-omschrijving").value = i.omschrijving || "";
     document.getElementById("f-status").value = i.status;
-    document.getElementById("f-prioriteit").value = i.prioriteit;
     document.getElementById("f-eigenaar").value = i.eigenaar || "";
     document.getElementById("f-bu").value = i.business_unit || "";
     document.getElementById("f-team").value = i.team || "";
@@ -1059,7 +1018,6 @@ function saveInitiatief() {
     naam,
     omschrijving: document.getElementById("f-omschrijving").value.trim(),
     status: document.getElementById("f-status").value,
-    prioriteit: document.getElementById("f-prioriteit").value,
     eigenaar: document.getElementById("f-eigenaar").value.trim(),
     business_unit: document.getElementById("f-bu").value,
     team: document.getElementById("f-team").value.trim(),
@@ -1209,7 +1167,7 @@ function loadPortfolio(text) {
     const data = JSON.parse(text);
     if (data.strategische_themas) portfolio.strategische_themas = data.strategische_themas;
     if (data.initiatieven) portfolio.initiatieven = data.initiatieven;
-    filters = { status: "Alle", thema: "Alle", prioriteit: "Alle", bu: "Alle" };
+    filters = { status: "Alle", thema: "Alle", bu: "Alle" };
     renderAll();
     if (beheerOpen) { renderBeheerList(); renderThemas(); }
   } catch (e) {
@@ -1241,7 +1199,7 @@ portfolio.initiatieven = [
     naam: "Digitaal onboarding platform",
     omschrijving: "Vervanging van papieren onboardingproces door een volledig digitaal platform voor nieuwe medewerkers.",
     status: "Uitvoering",
-    prioriteit: "Hoog",
+
     eigenaar: "Lisa de Vries",
     business_unit: "Digitalisering",
     team: "EuA",
@@ -1255,7 +1213,7 @@ portfolio.initiatieven = [
     naam: "CO₂-reductie meetinfrastructuur",
     omschrijving: "Implementatie van real-time monitoring voor CO₂-uitstoot over alle locaties.",
     status: "Analyse",
-    prioriteit: "Hoog",
+
     eigenaar: "Marc Janssen",
     business_unit: "Energie uit Afval",
     team: "OPS",
@@ -1269,7 +1227,7 @@ portfolio.initiatieven = [
     naam: "AVG compliance audit",
     omschrijving: "Volledige audit van gegevensverwerkingsprocessen conform nieuwe AVG-richtlijnen.",
     status: "Uitvoering",
-    prioriteit: "Hoog",
+
     eigenaar: "Sarah Bos",
     business_unit: "GGC",
     team: "Legal",
@@ -1283,7 +1241,7 @@ portfolio.initiatieven = [
     naam: "Veiligheidstraining verplicht",
     omschrijving: "Jaarlijkse verplichte veiligheidstraining voor alle medewerkers op de werkvloer.",
     status: "Klaar",
-    prioriteit: "Midden",
+
     eigenaar: "Tom Bakker",
     business_unit: "Energie uit Afval",
     team: "HR",
@@ -1297,7 +1255,7 @@ portfolio.initiatieven = [
     naam: "Process mining implementatie",
     omschrijving: "Gebruik van process mining tools om knelpunten in operationele processen te identificeren.",
     status: "Idee",
-    prioriteit: "Laag",
+
     eigenaar: "Anna Smit",
     business_unit: "GGC",
     team: "EuA",
@@ -1311,7 +1269,7 @@ portfolio.initiatieven = [
     naam: "Single Sign-On uitrol",
     omschrijving: "Centrale authenticatie voor alle interne applicaties via SSO-platform.",
     status: "Goedgekeurd",
-    prioriteit: "Midden",
+
     eigenaar: "Kevin Hoek",
     business_unit: "Digitalisering",
     team: "IT",
