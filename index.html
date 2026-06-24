@@ -516,7 +516,7 @@
     </div>
   </div>
   <div class="header-right">
-    <button class="btn btn-secondary" onclick="loadFromJSON()">📂 Laden</button>
+    <button class="btn btn-secondary" id="btn-sync-status" onclick="loadFromGithub()">☁ Laden</button>
     <button class="btn btn-secondary" id="btn-beheer" onclick="toggleBeheer()">⚙ Beheer</button>
   </div>
 </header>
@@ -599,6 +599,7 @@
       <button class="beheer-tab active" onclick="setBeheerTab('initiatieven')">Initiatieven</button>
       <button class="beheer-tab" onclick="setBeheerTab('themas')">Strategische Thema's</button>
       <button class="beheer-tab" onclick="setBeheerTab('beveiliging')">Beveiliging</button>
+      <button class="beheer-tab" onclick="setBeheerTab('github')">GitHub Sync</button>
     </div>
 
     <!-- Tab: Initiatieven -->
@@ -726,11 +727,37 @@
       </div>
     </div>
 
+    <!-- Tab: GitHub Sync -->
+    <div class="beheer-content hidden" id="tab-github">
+      <p style="font-size:14px;color:var(--text-muted);margin-bottom:16px;">
+        Verbind met GitHub om wijzigingen direct op te slaan in <code style="font-family:'DM Mono',monospace;color:var(--accent)">portfolio.json</code>.
+      </p>
+      <div class="pw-change-form">
+        <label>GitHub Personal Access Token</label>
+        <div class="pw-input-row">
+          <input type="password" id="gh-token" placeholder="ghp_..." autocomplete="off">
+        </div>
+        <label style="margin-top:8px;">Repository (eigenaar/naam)</label>
+        <input type="text" id="gh-repo" placeholder="joostsmit/LPM" value="joostsmit/LPM">
+        <label style="margin-top:8px;">Bestandspad</label>
+        <input type="text" id="gh-path" placeholder="portfolio.json" value="portfolio.json">
+        <div class="pw-input-row" style="margin-top:12px;">
+          <button class="btn btn-primary" onclick="saveGithubSettings()">Verbinding opslaan</button>
+          <button class="btn btn-secondary" onclick="testGithubConnection()">Verbinding testen</button>
+        </div>
+        <div id="gh-status" style="font-size:12px;min-height:16px;margin-top:6px;"></div>
+      </div>
+      <div style="margin-top:16px;padding:12px 16px;background:var(--surface2);border:1px solid var(--border);border-radius:var(--radius-sm);font-size:12px;color:var(--text-muted);line-height:1.7;">
+        Het token heeft minimaal <strong style="color:var(--text)">repo → Contents: Read &amp; Write</strong> rechten nodig.<br>
+        Token en instellingen worden lokaal opgeslagen (localStorage) en nooit verstuurd buiten GitHub.
+      </div>
+    </div>
+
     <!-- Save bar -->
     <div class="save-bar">
-      <button class="btn btn-primary" onclick="saveToJSON()">💾 Opslaan naar portfolio.json</button>
+      <button class="btn btn-primary" id="btn-gh-save" onclick="saveToGithub()">☁ Opslaan naar GitHub</button>
       <button class="btn btn-secondary" onclick="downloadJSON()">⬇️ Download JSON</button>
-      <span class="save-confirm" id="save-confirm">Opgeslagen ✓</span>
+      <span class="save-confirm" id="save-confirm"></span>
     </div>
   </div>
 </div>
@@ -803,7 +830,6 @@ let beheerOpen = false;
 let activeBeheerTab = "initiatieven";
 let editingId = null;
 let deleteId = null;
-let fileHandle = null;
 
 // ─── WSJF ────────────────────────────────────────────────────────────
 function calcWsjf(w) {
@@ -1073,13 +1099,14 @@ function openBeheer() {
 
 function setBeheerTab(tab) {
   activeBeheerTab = tab;
-  ["initiatieven","themas","beveiliging"].forEach(t => {
+  ["initiatieven","themas","beveiliging","github"].forEach(t => {
     document.getElementById("tab-" + t).classList.toggle("hidden", tab !== t);
   });
   document.querySelectorAll(".beheer-tab").forEach((el, i) => {
-    el.classList.toggle("active", ["initiatieven","themas","beveiliging"][i] === tab);
+    el.classList.toggle("active", ["initiatieven","themas","beveiliging","github"][i] === tab);
   });
   if (tab === "themas") renderThemas();
+  if (tab === "github") loadGithubSettingsUI();
 }
 
 function renderBeheerList() {
@@ -1278,27 +1305,127 @@ function removeThema(idx) {
   renderFilters();
 }
 
-// ─── OPSLAAN / LADEN ──────────────────────────────────────────────────
-async function saveToJSON() {
-  const json = JSON.stringify(portfolio, null, 2);
-  if ('showSaveFilePicker' in window || fileHandle) {
-    try {
-      if (!fileHandle) {
-        fileHandle = await window.showSaveFilePicker({
-          suggestedName: 'portfolio.json',
-          types: [{ description: 'JSON', accept: { 'application/json': ['.json'] } }]
-        });
-      }
-      const writable = await fileHandle.createWritable();
-      await writable.write(json);
-      await writable.close();
-      showSaveConfirm();
-      return;
-    } catch (e) {
-      if (e.name === 'AbortError') return;
-    }
+// ─── GITHUB SYNC ──────────────────────────────────────────────────────
+let ghFileSha = null;
+
+function getGhSettings() {
+  return {
+    token: localStorage.getItem("lpm_gh_token") || "",
+    repo:  localStorage.getItem("lpm_gh_repo")  || "joostsmit/LPM",
+    path:  localStorage.getItem("lpm_gh_path")  || "portfolio.json",
+  };
+}
+
+function loadGithubSettingsUI() {
+  const s = getGhSettings();
+  document.getElementById("gh-token").value = s.token;
+  document.getElementById("gh-repo").value  = s.repo;
+  document.getElementById("gh-path").value  = s.path;
+  setGhStatus("", "");
+}
+
+function saveGithubSettings() {
+  localStorage.setItem("lpm_gh_token", document.getElementById("gh-token").value.trim());
+  localStorage.setItem("lpm_gh_repo",  document.getElementById("gh-repo").value.trim());
+  localStorage.setItem("lpm_gh_path",  document.getElementById("gh-path").value.trim());
+  setGhStatus("Instellingen opgeslagen ✓", "green");
+}
+
+function setGhStatus(msg, color) {
+  const el = document.getElementById("gh-status");
+  if (!el) return;
+  el.textContent = msg;
+  el.style.color = color === "green" ? "var(--green)" : color === "red" ? "var(--red)" : "var(--text-muted)";
+}
+
+async function ghApiCall(method, path, body) {
+  const s = getGhSettings();
+  if (!s.token) throw new Error("Geen GitHub token ingesteld. Open Beheer → GitHub Sync.");
+  const res = await fetch(`https://api.github.com/repos/${s.repo}/contents/${path}`, {
+    method,
+    headers: {
+      "Authorization": `token ${s.token}`,
+      "Content-Type": "application/json",
+      "Accept": "application/vnd.github+json",
+    },
+    body: body ? JSON.stringify(body) : undefined,
+  });
+  const data = await res.json();
+  if (!res.ok) throw new Error(data.message || `GitHub API fout ${res.status}`);
+  return data;
+}
+
+async function testGithubConnection() {
+  saveGithubSettings();
+  setGhStatus("Verbinding testen…", "");
+  try {
+    const s = getGhSettings();
+    const data = await ghApiCall("GET", s.path);
+    ghFileSha = data.sha;
+    setGhStatus(`Verbonden ✓  (${data.path}, ${(data.size/1024).toFixed(1)} KB)`, "green");
+  } catch(e) {
+    setGhStatus(`Fout: ${e.message}`, "red");
   }
-  downloadJSON();
+}
+
+async function loadFromGithub() {
+  const btn = document.getElementById("btn-sync-status");
+  const orig = btn.textContent;
+  btn.textContent = "Laden…";
+  btn.disabled = true;
+  try {
+    const s = getGhSettings();
+    if (!s.token) {
+      showSaveMsg("Stel eerst een GitHub token in via Beheer → GitHub Sync.", "red");
+      return;
+    }
+    const data = await ghApiCall("GET", s.path);
+    ghFileSha = data.sha;
+    const text = atob(data.content.replace(/\n/g,""));
+    loadPortfolio(text);
+    showSaveMsg("Geladen van GitHub ✓", "green");
+  } catch(e) {
+    showSaveMsg(`Laden mislukt: ${e.message}`, "red");
+  } finally {
+    btn.textContent = orig;
+    btn.disabled = false;
+  }
+}
+
+async function saveToGithub() {
+  const btn = document.getElementById("btn-gh-save");
+  const orig = btn.textContent;
+  btn.textContent = "Opslaan…";
+  btn.disabled = true;
+  try {
+    const s = getGhSettings();
+    if (!s.token) {
+      showSaveMsg("Stel eerst een GitHub token in via Beheer → GitHub Sync.", "red");
+      return;
+    }
+    // fetch current SHA if we don't have it
+    if (!ghFileSha) {
+      try {
+        const cur = await ghApiCall("GET", s.path);
+        ghFileSha = cur.sha;
+      } catch(e) { /* new file */ }
+    }
+    const json = JSON.stringify(portfolio, null, 2);
+    const content = btoa(unescape(encodeURIComponent(json)));
+    const body = {
+      message: "Portfolio bijgewerkt via LPM dashboard",
+      content,
+      ...(ghFileSha ? { sha: ghFileSha } : {}),
+    };
+    const result = await ghApiCall("PUT", s.path, body);
+    ghFileSha = result.content.sha;
+    showSaveMsg("Opgeslagen naar GitHub ✓", "green");
+  } catch(e) {
+    showSaveMsg(`Opslaan mislukt: ${e.message}`, "red");
+  } finally {
+    btn.textContent = orig;
+    btn.disabled = false;
+  }
 }
 
 function downloadJSON() {
@@ -1308,32 +1435,6 @@ function downloadJSON() {
   a.href = url; a.download = 'portfolio.json';
   a.click();
   URL.revokeObjectURL(url);
-  showSaveConfirm();
-}
-
-async function loadFromJSON() {
-  if ('showOpenFilePicker' in window) {
-    try {
-      const [handle] = await window.showOpenFilePicker({
-        types: [{ description: 'JSON', accept: { 'application/json': ['.json'] } }]
-      });
-      fileHandle = handle;
-      const file = await handle.getFile();
-      const text = await file.text();
-      loadPortfolio(text);
-      return;
-    } catch (e) {
-      if (e.name === 'AbortError') return;
-    }
-  }
-  // fallback
-  const input = document.createElement('input');
-  input.type = 'file'; input.accept = '.json';
-  input.onchange = async e => {
-    const text = await e.target.files[0].text();
-    loadPortfolio(text);
-  };
-  input.click();
 }
 
 function loadPortfolio(text) {
@@ -1345,14 +1446,16 @@ function loadPortfolio(text) {
     renderAll();
     if (beheerOpen) { renderBeheerList(); renderThemas(); }
   } catch (e) {
-    alert("Kon het bestand niet laden: ongeldige JSON.");
+    showSaveMsg("Kon bestand niet laden: ongeldige JSON.", "red");
   }
 }
 
-function showSaveConfirm() {
+function showSaveMsg(msg, color) {
   const el = document.getElementById("save-confirm");
+  el.textContent = msg;
+  el.style.color = color === "red" ? "var(--red)" : "var(--green)";
   el.classList.add("visible");
-  setTimeout(() => el.classList.remove("visible"), 2500);
+  setTimeout(() => { el.classList.remove("visible"); }, 3000);
 }
 
 // ─── UTIL ─────────────────────────────────────────────────────────────
@@ -1516,6 +1619,26 @@ portfolio.initiatieven = [
 ];
 
 renderAll();
+
+// Auto-load vanuit GitHub bij opstarten als token beschikbaar is
+(async () => {
+  const s = getGhSettings();
+  if (!s.token) return;
+  const btn = document.getElementById("btn-sync-status");
+  btn.textContent = "☁ Laden…";
+  btn.disabled = true;
+  try {
+    const data = await ghApiCall("GET", s.path);
+    ghFileSha = data.sha;
+    const text = atob(data.content.replace(/\n/g,""));
+    loadPortfolio(text);
+  } catch(e) {
+    showSaveMsg(`Auto-laden mislukt: ${e.message}`, "red");
+  } finally {
+    btn.textContent = "☁ Laden";
+    btn.disabled = false;
+  }
+})();
 </script>
 </body>
 </html>
