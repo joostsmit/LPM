@@ -1,0 +1,119 @@
+{
+  "strategische_themas": [
+    "Veiligheid",
+    "Beschikbaarheid & Opbrengst",
+    "Toekomstbestendigheid",
+    "Milieurendement",
+    "Slagkracht"
+  ],
+  "initiatieven": [
+    {
+      "id": 1,
+      "naam": "Digitaal onboarding platform",
+      "omschrijving": "Vervanging van papieren onboardingproces door een volledig digitaal platform voor nieuwe medewerkers.",
+      "status": "Uitvoering",
+      "eigenaar": "Lisa de Vries",
+      "business_unit": "Digitalisering",
+      "team": "EuA",
+      "thema": "Digitalisering",
+      "startdatum": "2025-02-01",
+      "wsjf": {
+        "business_value": 8,
+        "time_criticality": 8,
+        "risk_reduction": 5,
+        "job_size": 5
+      },
+      "notitie": "Go-live gepland voor Q3 2025. Afhankelijk van HR-systeem migratie."
+    },
+    {
+      "id": 2,
+      "naam": "CO₂-reductie meetinfrastructuur",
+      "omschrijving": "Implementatie van real-time monitoring voor CO₂-uitstoot over alle locaties.",
+      "status": "Analyse",
+      "eigenaar": "Marc Janssen",
+      "business_unit": "Energie uit Afval",
+      "team": "OPS",
+      "thema": "Duurzaamheid",
+      "startdatum": "2025-04-01",
+      "wsjf": {
+        "business_value": 8,
+        "time_criticality": 8,
+        "risk_reduction": 8,
+        "job_size": 8
+      },
+      "notitie": ""
+    },
+    {
+      "id": 3,
+      "naam": "AVG compliance audit",
+      "omschrijving": "Volledige audit van gegevensverwerkingsprocessen conform nieuwe AVG-richtlijnen.",
+      "status": "Uitvoering",
+      "eigenaar": "Sarah Bos",
+      "business_unit": "GGC",
+      "team": "Legal",
+      "thema": "Compliance",
+      "startdatum": "2025-01-15",
+      "wsjf": {
+        "business_value": 8,
+        "time_criticality": 13,
+        "risk_reduction": 13,
+        "job_size": 5
+      },
+      "notitie": "Deadline: 1 juli 2025 vanwege externe audit."
+    },
+    {
+      "id": 4,
+      "naam": "Veiligheidstraining verplicht",
+      "omschrijving": "Jaarlijkse verplichte veiligheidstraining voor alle medewerkers op de werkvloer.",
+      "status": "Klaar",
+      "eigenaar": "Tom Bakker",
+      "business_unit": "Energie uit Afval",
+      "team": "HR",
+      "thema": "Veiligheid",
+      "startdatum": "2025-01-01",
+      "wsjf": {
+        "business_value": 5,
+        "time_criticality": 8,
+        "risk_reduction": 8,
+        "job_size": 3
+      },
+      "notitie": ""
+    },
+    {
+      "id": 5,
+      "naam": "Process mining implementatie",
+      "omschrijving": "Gebruik van process mining tools om knelpunten in operationele processen te identificeren.",
+      "status": "Idee",
+      "eigenaar": "Anna Smit",
+      "business_unit": "GGC",
+      "team": "EuA",
+      "thema": "Operational Excellence",
+      "startdatum": "",
+      "wsjf": {
+        "business_value": 5,
+        "time_criticality": 3,
+        "risk_reduction": 3,
+        "job_size": 8
+      },
+      "notitie": "Verkenningsfase — budget nog niet goedgekeurd."
+    },
+    {
+      "id": 6,
+      "naam": "Single Sign-On uitrol",
+      "omschrijving": "Centrale authenticatie voor alle interne applicaties via SSO-platform.",
+      "status": "Goedgekeurd",
+      "eigenaar": "Kevin Hoek",
+      "business_unit": "Digitalisering",
+      "team": "IT",
+      "thema": "Digitalisering",
+      "startdatum": "2025-03-01",
+      "wsjf": {
+        "business_value": 8,
+        "time_criticality": 5,
+        "risk_reduction": 8,
+        "job_size": 5
+      },
+      "notitie": ""
+    }
+  ]
+}
