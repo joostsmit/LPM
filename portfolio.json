@@ -10,111 +10,39 @@
   "initiatieven": [
     {
       "id": 1,
-      "naam": "Digitaal onboarding platform",
-      "omschrijving": "Vervanging van papieren onboardingproces door een volledig digitaal platform voor nieuwe medewerkers.",
-      "status": "Uitvoering",
-      "eigenaar": "Lisa de Vries",
-      "business_unit": "Digitalisering",
-      "team": "EuA",
-      "thema": "Digitalisering",
-      "startdatum": "2025-02-01",
-      "wsjf": {
-        "business_value": 8,
-        "time_criticality": 8,
-        "risk_reduction": 5,
-        "job_size": 5
-      },
-      "notitie": "Go-live gepland voor Q3 2025. Afhankelijk van HR-systeem migratie."
-    },
-    {
-      "id": 2,
-      "naam": "CO₂-reductie meetinfrastructuur",
-      "omschrijving": "Implementatie van real-time monitoring voor CO₂-uitstoot over alle locaties.",
-      "status": "Analyse",
-      "eigenaar": "Marc Janssen",
+      "naam": "Veiligstelkaarten",
+      "omschrijving": "LOTO proces lostrekken van werkvergunning proces",
+      "status": "Goedgekeurd",
+      "eigenaar": "Roland vd Willigen",
       "business_unit": "Energie uit Afval",
-      "team": "OPS",
-      "thema": "Duurzaamheid",
-      "startdatum": "2025-04-01",
-      "wsjf": {
-        "business_value": 8,
-        "time_criticality": 8,
-        "risk_reduction": 8,
-        "job_size": 8
-      },
-      "notitie": ""
-    },
-    {
-      "id": 3,
-      "naam": "AVG compliance audit",
-      "omschrijving": "Volledige audit van gegevensverwerkingsprocessen conform nieuwe AVG-richtlijnen.",
-      "status": "Uitvoering",
-      "eigenaar": "Sarah Bos",
-      "business_unit": "GGC",
-      "team": "Legal",
-      "thema": "Compliance",
-      "startdatum": "2025-01-15",
-      "wsjf": {
-        "business_value": 8,
-        "time_criticality": 13,
-        "risk_reduction": 13,
-        "job_size": 5
-      },
-      "notitie": "Deadline: 1 juli 2025 vanwege externe audit."
-    },
-    {
-      "id": 4,
-      "naam": "Veiligheidstraining verplicht",
-      "omschrijving": "Jaarlijkse verplichte veiligheidstraining voor alle medewerkers op de werkvloer.",
-      "status": "Klaar",
-      "eigenaar": "Tom Bakker",
-      "business_unit": "Energie uit Afval",
-      "team": "HR",
+      "team": "",
       "thema": "Veiligheid",
-      "startdatum": "2025-01-01",
-      "wsjf": {
-        "business_value": 5,
-        "time_criticality": 8,
-        "risk_reduction": 8,
-        "job_size": 3
-      },
-      "notitie": ""
-    },
-    {
-      "id": 5,
-      "naam": "Process mining implementatie",
-      "omschrijving": "Gebruik van process mining tools om knelpunten in operationele processen te identificeren.",
-      "status": "Idee",
-      "eigenaar": "Anna Smit",
-      "business_unit": "GGC",
-      "team": "EuA",
-      "thema": "Operational Excellence",
-      "startdatum": "",
+      "startdatum": "2023-01-01",
+      "notitie": "",
       "wsjf": {
         "business_value": 5,
         "time_criticality": 3,
-        "risk_reduction": 3,
-        "job_size": 8
-      },
-      "notitie": "Verkenningsfase — budget nog niet goedgekeurd."
+        "risk_reduction": 8,
+        "job_size": 21
+      }
     },
     {
-      "id": 6,
-      "naam": "Single Sign-On uitrol",
-      "omschrijving": "Centrale authenticatie voor alle interne applicaties via SSO-platform.",
-      "status": "Goedgekeurd",
-      "eigenaar": "Kevin Hoek",
-      "business_unit": "Digitalisering",
-      "team": "IT",
-      "thema": "Digitalisering",
-      "startdatum": "2025-03-01",
+      "id": 2,
+      "naam": "AI: Pilot tbv onderhoudschema's opstellen",
+      "omschrijving": "",
+      "status": "Uitvoering",
+      "eigenaar": "Joost Smit",
+      "business_unit": "Energie uit Afval",
+      "team": "",
+      "thema": "Slagkracht",
+      "startdatum": "2026-06-15",
+      "notitie": "",
       "wsjf": {
         "business_value": 8,
-        "time_criticality": 5,
-        "risk_reduction": 8,
-        "job_size": 5
-      },
-      "notitie": ""
+        "time_criticality": 3,
+        "risk_reduction": 3,
+        "job_size": 3
+      }
     }
   ]
 }
