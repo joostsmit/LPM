@@ -511,8 +511,8 @@
   <div class="header-left">
     <h1>Portfolio <span>Dashboard</span></h1>
     <div class="toggle-view">
-      <button id="btn-kaart" class="active" onclick="setView('kaart')">⊞ Kaarten</button>
-      <button id="btn-tabel" onclick="setView('tabel')">≡ Tabel</button>
+      <button id="btn-kaart" onclick="setView('kaart')">⊞ Kaarten</button>
+      <button id="btn-tabel" class="active" onclick="setView('tabel')">≡ Tabel</button>
     </div>
   </div>
   <div class="header-right">
@@ -557,7 +557,7 @@
   </div>
 
   <!-- VIEWER -->
-  <div id="view-kaart">
+  <div id="view-kaart" class="hidden">
     <div class="cards-grid" id="cards-grid"></div>
     <div class="empty-state hidden" id="empty-kaart">
       <div class="icon">📋</div>
@@ -566,7 +566,7 @@
     </div>
   </div>
 
-  <div id="view-tabel" class="hidden">
+  <div id="view-tabel">
     <div class="table-wrap">
       <table id="initiatieven-table">
         <thead>
@@ -825,7 +825,7 @@ let wsjfState = { bv: 5, tc: 5, rr: 5, js: 5 };
 let filters = { status: "Alle", thema: "Alle", bu: "Alle" };
 let sortCol = "wsjf";
 let sortDir = "desc";
-let currentView = "kaart";
+let currentView = "tabel";
 let beheerOpen = false;
 let activeBeheerTab = "initiatieven";
 let editingId = null;
