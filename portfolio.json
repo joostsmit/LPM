@@ -389,6 +389,42 @@
         "risk_reduction": 3,
         "job_size": 8
       }
+    },
+    {
+      "id": 22,
+      "naam": "Rapportage: SDI Dagrapport",
+      "omschrijving": "",
+      "status": "Uitvoering",
+      "eigenaar": "Roland vd Willigen",
+      "business_unit": "Energie uit Afval",
+      "team": "DM&R",
+      "thema": "Beschikbaarheid & Opbrengst",
+      "startdatum": "",
+      "notitie": "",
+      "wsjf": {
+        "business_value": 13,
+        "time_criticality": 13,
+        "risk_reduction": 5,
+        "job_size": 8
+      }
+    },
+    {
+      "id": 23,
+      "naam": "Rapportage: Alarm Management",
+      "omschrijving": "Rapportage om de top 10 alarmen in het DCS in kaart te brengen en stelselmatig terug te brengen.",
+      "status": "Beoordeling",
+      "eigenaar": "Alex Tijmstra",
+      "business_unit": "Energie uit Afval",
+      "team": "DM&R",
+      "thema": "Onbekend",
+      "startdatum": "",
+      "notitie": "Data ontsloten naar SFTP, controleren. Hierna landen in DWH.",
+      "wsjf": {
+        "business_value": 8,
+        "time_criticality": 5,
+        "risk_reduction": 3,
+        "job_size": 5
+      }
     }
   ]
 }
