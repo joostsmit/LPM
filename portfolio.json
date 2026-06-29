@@ -115,6 +115,24 @@
         "risk_reduction": 5,
         "job_size": 5
       }
+    },
+    {
+      "id": 7,
+      "naam": "PVNED Prognose naar DCS Dordrecht",
+      "omschrijving": "Verzoek om PVNED prognose data te ontsluiten naar het DCS in Dordrecht, aangevraagd door Boy Noorlandt.",
+      "status": "Idee",
+      "eigenaar": "Dennis Eijgelsheim",
+      "business_unit": "Energie uit Afval",
+      "team": "",
+      "thema": "Beschikbaarheid & Opbrengst",
+      "startdatum": "",
+      "notitie": "",
+      "wsjf": {
+        "business_value": 5,
+        "time_criticality": 2,
+        "risk_reduction": 2,
+        "job_size": 13
+      }
     }
   ]
 }
