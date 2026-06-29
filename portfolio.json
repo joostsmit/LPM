@@ -335,6 +335,24 @@
         "risk_reduction": 3,
         "job_size": 5
       }
+    },
+    {
+      "id": 19,
+      "naam": "Rapportage: Capaciteitsrapportage",
+      "omschrijving": "Planningsrapportage voor TDE / TDW ter vervanging van whiteboard.",
+      "status": "Uitvoering",
+      "eigenaar": "Sander Hendriks",
+      "business_unit": "Energie uit Afval",
+      "team": "DM&R",
+      "thema": "Onbekend",
+      "startdatum": "",
+      "notitie": "",
+      "wsjf": {
+        "business_value": 3,
+        "time_criticality": 3,
+        "risk_reduction": 3,
+        "job_size": 5
+      }
     }
   ]
 }
