@@ -69,7 +69,7 @@
       "status": "Goedgekeurd",
       "eigenaar": "Sander Hendriks",
       "business_unit": "Energie uit Afval",
-      "team": "",
+      "team": "Installaties & Onderhoud",
       "thema": "Slagkracht",
       "startdatum": "",
       "notitie": "Eigenlijk nog verder specificeren, MM heeft allerlei \"Thema's\"",
@@ -105,7 +105,7 @@
       "status": "Idee",
       "eigenaar": "Kees Visser",
       "business_unit": "Energie uit Afval",
-      "team": "",
+      "team": "Installaties & Onderhoud",
       "thema": "Digitalisering",
       "startdatum": "",
       "notitie": "Nog beoordelen.",
@@ -132,6 +132,42 @@
         "time_criticality": 2,
         "risk_reduction": 2,
         "job_size": 13
+      }
+    },
+    {
+      "id": 8,
+      "naam": "Weekrapportage Purmerend",
+      "omschrijving": "Geautomatiseerde weekrapportage voor Purmerend",
+      "status": "Uitvoering",
+      "eigenaar": "Sandra de Bruin",
+      "business_unit": "GGC",
+      "team": "DM&R",
+      "thema": "Beschikbaarheid & Opbrengst",
+      "startdatum": "2026-04-01",
+      "notitie": "",
+      "wsjf": {
+        "business_value": 5,
+        "time_criticality": 3,
+        "risk_reduction": 3,
+        "job_size": 5
+      }
+    },
+    {
+      "id": 9,
+      "naam": "Vervangen magazijn uitgifte programma",
+      "omschrijving": "Vervangen van de legacy applicatie voor het uitgeven van artikelen in het magazijn én het daarbij mogelijk maken om mobiel artikelen te kunnen scannen op verzoek van Marcel Bijl.\nOmbouwen naar Mendix op basis van API data uitwisseling",
+      "status": "Goedgekeurd",
+      "eigenaar": "Joost Smit",
+      "business_unit": "Energie uit Afval",
+      "team": "Installaties & Onderhoud",
+      "thema": "Digitalisering",
+      "startdatum": "",
+      "notitie": "",
+      "wsjf": {
+        "business_value": 3,
+        "time_criticality": 8,
+        "risk_reduction": 3,
+        "job_size": 8
       }
     }
   ]
