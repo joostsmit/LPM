@@ -187,6 +187,24 @@
         "risk_reduction": 5,
         "job_size": 5
       }
+    },
+    {
+      "id": 11,
+      "naam": "KAM AI Agent Pilot",
+      "omschrijving": "KAM Sharepoint data ontsluiten via een Copilot Agent als pilot. Ontsluiten aan een select aantal mensen om eerste ervaring op te doen en momentum te genereren.",
+      "status": "Uitvoering",
+      "eigenaar": "Joost Smit",
+      "business_unit": "Energie uit Afval",
+      "team": "BP",
+      "thema": "Slagkracht",
+      "startdatum": "2026-06-01",
+      "notitie": "",
+      "wsjf": {
+        "business_value": 8,
+        "time_criticality": 3,
+        "risk_reduction": 5,
+        "job_size": 5
+      }
     }
   ]
 }
