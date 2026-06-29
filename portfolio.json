@@ -5,7 +5,10 @@
     "Slagkracht",
     "Milieurendement",
     "Toekomstbestendigheid",
-    "Beschikbaarheid & Opbrengst"
+    "Beschikbaarheid & Opbrengst",
+    "Brand- en arboveiligheid vergroten",
+    "Uitbreiding / modernisering realiseren",
+    "Kostenreductie"
   ],
   "initiatieven": [
     {
@@ -142,7 +145,7 @@
       "eigenaar": "Sandra de Bruin",
       "business_unit": "GGC",
       "team": "DM&R",
-      "thema": "Beschikbaarheid & Opbrengst",
+      "thema": "Kostenreductie",
       "startdatum": "2026-04-01",
       "notitie": "",
       "wsjf": {
@@ -178,7 +181,7 @@
       "eigenaar": "Rein Rutte",
       "business_unit": "GGC",
       "team": "",
-      "thema": "Slagkracht",
+      "thema": "Brand- en arboveiligheid vergroten",
       "startdatum": "2026-01-01",
       "notitie": "",
       "wsjf": {
@@ -214,7 +217,7 @@
       "eigenaar": "Sandra Bruin",
       "business_unit": "GGC",
       "team": "",
-      "thema": "Beschikbaarheid & Opbrengst",
+      "thema": "Uitbreiding / modernisering realiseren",
       "startdatum": "2026-07-01",
       "notitie": "",
       "wsjf": {
@@ -258,6 +261,24 @@
         "time_criticality": 5,
         "risk_reduction": 3,
         "job_size": 8
+      }
+    },
+    {
+      "id": 15,
+      "naam": "Onderzoek toepassing Blue Entrance bij GGC",
+      "omschrijving": "Onderzoeken of het proces van toegang en werkvergunningen bij GGC&C gedigitaliseerd kan worden.",
+      "status": "Beoordeling",
+      "eigenaar": "Joost Smit",
+      "business_unit": "GGC",
+      "team": "",
+      "thema": "Brand- en arboveiligheid vergroten",
+      "startdatum": "",
+      "notitie": "",
+      "wsjf": {
+        "business_value": 5,
+        "time_criticality": 5,
+        "risk_reduction": 5,
+        "job_size": 5
       }
     }
   ]
