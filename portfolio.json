@@ -317,6 +317,24 @@
         "risk_reduction": 5,
         "job_size": 5
       }
+    },
+    {
+      "id": 18,
+      "naam": "AI bij EuA Roadmap",
+      "omschrijving": "",
+      "status": "Uitvoering",
+      "eigenaar": "Joost Smit",
+      "business_unit": "Energie uit Afval",
+      "team": "BP",
+      "thema": "Slagkracht",
+      "startdatum": "",
+      "notitie": "",
+      "wsjf": {
+        "business_value": 8,
+        "time_criticality": 8,
+        "risk_reduction": 3,
+        "job_size": 5
+      }
     }
   ]
 }
