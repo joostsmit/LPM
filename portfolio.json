@@ -33,7 +33,7 @@
       "status": "Uitvoering",
       "eigenaar": "Joost Smit",
       "business_unit": "Energie uit Afval",
-      "team": "",
+      "team": "BP",
       "thema": "Slagkracht",
       "startdatum": "2026-06-15",
       "notitie": "",
@@ -168,6 +168,24 @@
         "time_criticality": 8,
         "risk_reduction": 3,
         "job_size": 8
+      }
+    },
+    {
+      "id": 10,
+      "naam": "Uitbreiding KAM Portaal met GGC",
+      "omschrijving": "KAM portaal uitbreiden met GGC data en instructies.",
+      "status": "Uitvoering",
+      "eigenaar": "Rein Rutte",
+      "business_unit": "GGC",
+      "team": "",
+      "thema": "Slagkracht",
+      "startdatum": "2026-01-01",
+      "notitie": "",
+      "wsjf": {
+        "business_value": 8,
+        "time_criticality": 3,
+        "risk_reduction": 5,
+        "job_size": 5
       }
     }
   ]
