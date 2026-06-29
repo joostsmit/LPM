@@ -43,6 +43,60 @@
         "risk_reduction": 3,
         "job_size": 3
       }
+    },
+    {
+      "id": 3,
+      "naam": "Digitale verwerking Veiligheidsrondes",
+      "omschrijving": "Wens om veiligheidsrondes te kunnen lopen met behulp van bijv een app ipv het verwerken via Excel bestanden en het handmatig verwerken van foto's.",
+      "status": "Beoordeling",
+      "eigenaar": "Alex Tijmstra",
+      "business_unit": "Energie uit Afval",
+      "team": "",
+      "thema": "Veiligheid",
+      "startdatum": "",
+      "notitie": "Ter beoordeling met oa MT.",
+      "wsjf": {
+        "business_value": 5,
+        "time_criticality": 2,
+        "risk_reduction": 3,
+        "job_size": 13
+      }
+    },
+    {
+      "id": 4,
+      "naam": "Materiaal Management: Q3",
+      "omschrijving": "Allerhande EAM wijzigingen tbv artikel en magazijn beheer.",
+      "status": "Goedgekeurd",
+      "eigenaar": "Sander Hendriks",
+      "business_unit": "Energie uit Afval",
+      "team": "",
+      "thema": "Slagkracht",
+      "startdatum": "",
+      "notitie": "Eigenlijk nog verder specificeren, MM heeft allerlei \"Thema's\"",
+      "wsjf": {
+        "business_value": 5,
+        "time_criticality": 3,
+        "risk_reduction": 3,
+        "job_size": 13
+      }
+    },
+    {
+      "id": 5,
+      "naam": "Looplijsten mbv mobiel lopen",
+      "omschrijving": "Verzoek om looplijsten te kunnen verwerken op een app \"in het veld\". Vereist inzet van de digital work app, hier zijn licentiekosten mee gemoeid.",
+      "status": "Beoordeling",
+      "eigenaar": "Alex Tijmstra",
+      "business_unit": "Energie uit Afval",
+      "team": "",
+      "thema": "Slagkracht",
+      "startdatum": "",
+      "notitie": "Ter beoordeling en impact analyse: voornamelijk qua kosten, wat betekent dit?",
+      "wsjf": {
+        "business_value": 8,
+        "time_criticality": 3,
+        "risk_reduction": 3,
+        "job_size": 8
+      }
     }
   ]
 }
