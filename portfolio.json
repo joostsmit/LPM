@@ -353,6 +353,24 @@
         "risk_reduction": 3,
         "job_size": 5
       }
+    },
+    {
+      "id": 20,
+      "naam": "Onderzoek Werkvergunningen voor FZ",
+      "omschrijving": "Onderzoek of EAM of Ultimo kan voorzien in werkvergunning functionaliteit voor Facilitair.",
+      "status": "Beoordeling",
+      "eigenaar": "Bart Bremer",
+      "business_unit": "",
+      "team": "",
+      "thema": "Onbekend",
+      "startdatum": "",
+      "notitie": "",
+      "wsjf": {
+        "business_value": 3,
+        "time_criticality": 3,
+        "risk_reduction": 3,
+        "job_size": 8
+      }
     }
   ]
 }
