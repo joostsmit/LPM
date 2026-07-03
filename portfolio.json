@@ -159,7 +159,7 @@
     {
       "id": 9,
       "naam": "Vervangen magazijn uitgifte programma",
-      "omschrijving": "Vervangen van de legacy applicatie voor het uitgeven van artikelen in het magazijn én het daarbij mogelijk maken om mobiel artikelen te kunnen scannen op verzoek van Marcel Bijl.\nOmbouwen naar Mendix op basis van API data uitwisseling",
+      "omschrijving": "Vervangen van de legacy applicatie voor het uitgeven van artikelen in het magazijn Ã©n het daarbij mogelijk maken om mobiel artikelen te kunnen scannen op verzoek van Marcel Bijl.\nOmbouwen naar Mendix op basis van API data uitwisseling",
       "status": "Goedgekeurd",
       "eigenaar": "Joost Smit",
       "business_unit": "Energie uit Afval",
@@ -424,6 +424,24 @@
         "time_criticality": 5,
         "risk_reduction": 3,
         "job_size": 5
+      }
+    },
+    {
+      "id": 24,
+      "naam": "Herzien gebruikersgroepen EuA",
+      "omschrijving": "Herinrichten van gebruikersgroepen in EAM om duidelijkere rolscheiding e.d. aan te brengen en groepen te maken op basis van functie.",
+      "status": "Beoordeling",
+      "eigenaar": "Sander Hendriks",
+      "business_unit": "Energie uit Afval",
+      "team": "Installaties & Onderhoud",
+      "thema": "Onbekend",
+      "startdatum": "",
+      "notitie": "Loopt al even qua gesprekken, formele uitspraak gewenst.",
+      "wsjf": {
+        "business_value": 2,
+        "time_criticality": 2,
+        "risk_reduction": 2,
+        "job_size": 13
       }
     }
   ]
