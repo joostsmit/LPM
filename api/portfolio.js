@@ -32,7 +32,7 @@ export default async function handler(req, res) {
       const body = Buffer.concat(chunks).toString("utf-8");
       JSON.parse(body); // valideer JSON vóór opslaan
       await put(BLOB_PATH, body, {
-        access: "private",
+        access: "public",
         addRandomSuffix: false,
         contentType: "application/json",
         token: process.env.BLOB_READ_WRITE_TOKEN,

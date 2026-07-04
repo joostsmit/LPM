@@ -13,7 +13,7 @@ const json = readFileSync(resolve("portfolio.json"), "utf-8");
 JSON.parse(json); // valideer JSON
 
 const result = await put("portfolio.json", json, {
-  access: "private",
+  access: "public",
   addRandomSuffix: false,
   contentType: "application/json",
   token,
