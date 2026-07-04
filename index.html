@@ -142,6 +142,23 @@
   }
   .filter-chip:hover { border-color: var(--accent); color: var(--accent); }
   .filter-chip.active { background: var(--accent); border-color: var(--accent); color: white; }
+  .filter-select {
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 500;
+    font-family: 'Inter', sans-serif;
+    border: 1px solid var(--border);
+    background: var(--surface);
+    color: var(--text);
+    cursor: pointer;
+    transition: border-color 0.15s;
+    width: auto;
+    min-width: 140px;
+    max-width: 260px;
+  }
+  .filter-select:focus { outline: none; border-color: var(--accent); }
+  .filter-select.active { border-color: var(--accent); color: var(--accent); font-weight: 600; }
 
   /* ─── CARD GRID ─── */
   .cards-grid {
@@ -548,11 +565,9 @@
     </div>
     <div class="filter-group">
       <span class="filter-label">Thema</span>
-      <div id="filter-thema"></div>
-    </div>
-    <div class="filter-group">
-      <span class="filter-label">BU</span>
-      <div id="filter-bu"></div>
+      <select class="filter-select" id="filter-thema" onchange="setFilterSelect(this,'thema')"></select>
+      <span class="filter-label" style="margin-left:16px">BU</span>
+      <select class="filter-select" id="filter-bu" onchange="setFilterSelect(this,'bu')"></select>
     </div>
   </div>
 
@@ -815,15 +830,23 @@ function renderFilters() {
     `<span class="filter-chip ${filters.status === s ? 'active' : ''}" data-filter="status" data-value="${s}" onclick="toggleFilter(this,'status')">${s}</span>`
   ).join('');
 
+  const themaEl = document.getElementById("filter-thema");
   const themas = ["Alle", ...portfolio.strategische_themas];
-  document.getElementById("filter-thema").innerHTML = themas.map(t =>
-    `<span class="filter-chip ${filters.thema === t ? 'active' : ''}" data-filter="thema" data-value="${t}" onclick="toggleFilter(this,'thema')">${t}</span>`
-  ).join('');
+  themaEl.innerHTML = themas.map(t => `<option value="${escHtml(t)}">${escHtml(t)}</option>`).join('');
+  themaEl.value = filters.thema;
+  themaEl.classList.toggle("active", filters.thema !== "Alle");
 
+  const buEl = document.getElementById("filter-bu");
   const bus = ["Alle", ...BUSINESS_UNITS];
-  document.getElementById("filter-bu").innerHTML = bus.map(b =>
-    `<span class="filter-chip ${filters.bu === b ? 'active' : ''}" data-filter="bu" data-value="${b}" onclick="toggleFilter(this,'bu')">${b}</span>`
-  ).join('');
+  buEl.innerHTML = bus.map(b => `<option value="${escHtml(b)}">${escHtml(b)}</option>`).join('');
+  buEl.value = filters.bu;
+  buEl.classList.toggle("active", filters.bu !== "Alle");
+}
+
+function setFilterSelect(el, group) {
+  filters[group] = el.value;
+  el.classList.toggle("active", el.value !== "Alle");
+  renderAll();
 }
 
 function toggleFilter(el, group) {
