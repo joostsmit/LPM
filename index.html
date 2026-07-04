@@ -11,26 +11,26 @@
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
   :root {
-    --bg: #0f1117;
-    --surface: #181c27;
-    --surface2: #1e2336;
-    --surface3: #252b3d;
-    --border: #2a3050;
-    --accent: #4f8ef7;
-    --accent-hover: #6ba3f9;
-    --text: #e2e8f0;
-    --text-muted: #8892a4;
-    --text-dim: #5a6479;
-    --red: #ef4444;
-    --orange: #f97316;
-    --green: #22c55e;
-    --yellow: #eab308;
-    --purple: #a855f7;
-    --teal: #14b8a6;
-    --pink: #ec4899;
+    --bg: #f4f6fa;
+    --surface: #ffffff;
+    --surface2: #f0f2f7;
+    --surface3: #e6e9f0;
+    --border: #dde1eb;
+    --accent: #2563eb;
+    --accent-hover: #1d4ed8;
+    --text: #1a202c;
+    --text-muted: #64748b;
+    --text-dim: #94a3b8;
+    --red: #dc2626;
+    --orange: #ea580c;
+    --green: #16a34a;
+    --yellow: #ca8a04;
+    --purple: #7c3aed;
+    --teal: #0d9488;
+    --pink: #db2777;
     --radius: 10px;
     --radius-sm: 6px;
-    --shadow: 0 4px 24px rgba(0,0,0,0.4);
+    --shadow: 0 2px 12px rgba(0,0,0,0.08);
   }
 
   body {
@@ -175,15 +175,15 @@
     font-weight: 500;
     letter-spacing: 0.2px;
   }
-  .badge-status-idee { background: rgba(88,96,136,0.3); color: #8892a4; }
-  .badge-status-beoordeling { background: rgba(234,179,8,0.2); color: #eab308; }
-  .badge-status-analyse { background: rgba(79,142,247,0.2); color: #4f8ef7; }
-  .badge-status-goedgekeurd { background: rgba(20,184,166,0.2); color: #14b8a6; }
-  .badge-status-uitvoering { background: rgba(34,197,94,0.2); color: #22c55e; }
-  .badge-status-klaar { background: rgba(168,85,247,0.2); color: #a855f7; }
-  .badge-thema { background: rgba(20,184,166,0.15); color: var(--teal); }
-  .badge-team { background: rgba(236,72,153,0.15); color: var(--pink); }
-  .badge-bu { background: rgba(79,142,247,0.12); color: #7aadfa; }
+  .badge-status-idee { background: #e2e8f0; color: #475569; }
+  .badge-status-beoordeling { background: #fef9c3; color: #854d0e; }
+  .badge-status-analyse { background: #dbeafe; color: #1e40af; }
+  .badge-status-goedgekeurd { background: #ccfbf1; color: #0f766e; }
+  .badge-status-uitvoering { background: #dcfce7; color: #15803d; }
+  .badge-status-klaar { background: #ede9fe; color: #5b21b6; }
+  .badge-thema { background: #ccfbf1; color: var(--teal); }
+  .badge-team { background: #fce7f3; color: var(--pink); }
+  .badge-bu { background: #dbeafe; color: #1e40af; }
 
   .card-wsjf { display: flex; align-items: center; gap: 14px; }
   .wsjf-score-big {
@@ -206,16 +206,16 @@
   .note-icon { cursor: default; }
   #global-tooltip {
     position: fixed;
-    background: var(--surface3);
-    border: 1px solid var(--border);
+    background: #1e293b;
+    border: none;
     border-radius: var(--radius-sm);
     padding: 8px 12px;
     font-size: 12px;
-    color: var(--text);
+    color: #f1f5f9;
     max-width: 260px;
     line-height: 1.5;
     z-index: 9999;
-    box-shadow: var(--shadow);
+    box-shadow: 0 4px 16px rgba(0,0,0,0.18);
     pointer-events: none;
     opacity: 0;
     transition: opacity 0.15s;
@@ -330,6 +330,7 @@
     font-family: 'Inter', sans-serif;
     transition: border-color 0.15s;
     width: 100%;
+    -webkit-appearance: auto;
   }
   input[type="text"]:focus, input[type="date"]:focus, textarea:focus, select:focus {
     outline: none;
@@ -350,14 +351,14 @@
     padding: 4px 7px;
     border-radius: 4px;
     border: 1px solid var(--border);
-    background: var(--surface);
+    background: var(--surface2);
     color: var(--text-muted);
     cursor: pointer;
     transition: all 0.12s;
     min-width: 30px;
     text-align: center;
   }
-  .fib-btn:hover { border-color: var(--accent); color: var(--accent); }
+  .fib-btn:hover { border-color: var(--accent); color: var(--accent); background: #eff6ff; }
   .fib-btn.selected { background: var(--accent); border-color: var(--accent); color: white; }
   .wsjf-result {
     background: var(--surface);
@@ -409,8 +410,8 @@
   /* ─── MODAL ─── */
   .modal-overlay {
     position: fixed; inset: 0;
-    background: rgba(0,0,0,0.7);
-    backdrop-filter: blur(4px);
+    background: rgba(15,17,30,0.45);
+    backdrop-filter: blur(3px);
     z-index: 200;
     display: flex;
     align-items: center;
@@ -516,7 +517,6 @@
     </div>
   </div>
   <div class="header-right">
-    <button class="btn btn-secondary" id="btn-sync-status" onclick="loadFromGithub()">☁ Laden</button>
     <button class="btn btn-secondary" id="btn-beheer" onclick="toggleBeheer()">⚙ Beheer</button>
   </div>
 </header>
@@ -576,7 +576,8 @@
             <th onclick="sortTable('thema')" id="th-thema">Thema <span class="sort-icon" id="si-thema">↕</span></th>
             <th onclick="sortTable('business_unit')" id="th-business_unit">Business Unit <span class="sort-icon" id="si-business_unit">↕</span></th>
             <th onclick="sortTable('team')" id="th-team">Team <span class="sort-icon" id="si-team">↕</span></th>
-            <th onclick="sortTable('wsjf')" id="th-wsjf" class="sorted">WSJF <span class="sort-icon active" id="si-wsjf">↓</span></th>
+            <th onclick="sortTable('eigenaar')" id="th-eigenaar">Eigenaar <span class="sort-icon" id="si-eigenaar">↕</span></th>
+            <th onclick="sortTable('wsjf')" id="th-wsjf" class="sorted" title="Weighted Shortest Job First — prioriteringsscore op basis van Business Value, Time Criticality, Risk Reduction en Job Size">WSJF <span style="font-size:10px;opacity:0.6" data-note="Weighted Shortest Job First&#10;&#10;Score = (Business Value + Time Criticality + Risk Reduction) / Job Size&#10;&#10;Hoe hoger de score, hoe eerder het initiatief opgepakt moet worden.">ⓘ</span> <span class="sort-icon active" id="si-wsjf">↓</span></th>
           </tr>
         </thead>
         <tbody id="table-body"></tbody>
@@ -728,7 +729,6 @@
 
     <!-- Save bar -->
     <div class="save-bar">
-      <button class="btn btn-secondary" onclick="downloadJSON()">⬇️ Download JSON</button>
       <span class="save-confirm" id="save-confirm"></span>
     </div>
   </div>
@@ -947,6 +947,7 @@ function renderTable() {
       <td><span class="badge badge-thema">${escHtml(i.thema || "")}</span></td>
       <td>${i.business_unit ? `<span class="badge badge-bu">${escHtml(i.business_unit)}</span>` : "—"}</td>
       <td>${escHtml(i.team || "—")}</td>
+      <td>${escHtml(i.eigenaar || "—")}</td>
       <td><span class="wsjf-mono">${wsjf.toFixed(1)}</span></td>
     </tr>`;
   }).join('');
@@ -955,7 +956,7 @@ function renderTable() {
 function sortTable(col) {
   if (sortCol === col) { sortDir = sortDir === "asc" ? "desc" : "asc"; }
   else { sortCol = col; sortDir = col === "wsjf" ? "desc" : "asc"; }
-  ["naam","status","thema","business_unit","team","wsjf"].forEach(c => {
+  ["naam","status","thema","business_unit","team","eigenaar","wsjf"].forEach(c => {
     const th = document.getElementById("th-" + c);
     const si = document.getElementById("si-" + c);
     if (th) th.classList.toggle("sorted", c === sortCol);
@@ -1282,10 +1283,6 @@ function removeThema(idx) {
 
 // ─── VERCEL BLOB SYNC ─────────────────────────────────────────────────
 async function loadFromGithub() {
-  const btn = document.getElementById("btn-sync-status");
-  const orig = btn.textContent;
-  btn.textContent = "Laden…";
-  btn.disabled = true;
   try {
     const res = await fetch("/api/portfolio", { cache: "no-store" });
     if (!res.ok) throw new Error(`Server fout ${res.status}`);
@@ -1294,9 +1291,6 @@ async function loadFromGithub() {
     showSaveMsg("Geladen ✓", "green");
   } catch(e) {
     showSaveMsg(`Laden mislukt: ${e.message}`, "red");
-  } finally {
-    btn.textContent = orig;
-    btn.disabled = false;
   }
 }
 
@@ -1508,19 +1502,13 @@ renderAll();
 
 // Auto-load bij opstarten
 (async () => {
-  const btn = document.getElementById("btn-sync-status");
-  btn.textContent = "☁ Laden…";
-  btn.disabled = true;
   try {
     const res = await fetch("/api/portfolio", { cache: "no-store" });
-    if (!res.ok) throw new Error(`Status ${res.status}`);
+    if (!res.ok) return;
     const text = await res.text();
     loadPortfolio(text);
   } catch(e) {
-    // geen melding — demo-data blijft staan als API niet beschikbaar is
-  } finally {
-    btn.textContent = "☁ Laden";
-    btn.disabled = false;
+    // demo-data blijft staan als API niet beschikbaar is
   }
 })();
 </script>
