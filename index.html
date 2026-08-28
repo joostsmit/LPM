@@ -128,7 +128,7 @@
   /* ─── FILTERS ─── */
   .filters-section { margin-bottom: 20px; }
   .filter-group { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-bottom: 8px; }
-  .filter-label { font-size: 11px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.6px; color: var(--text-dim); min-width: 60px; }
+  .filter-label { font-size: 11px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.6px; color: var(--text-dim); min-width: 112px; }
   .filter-chip {
     padding: 4px 12px;
     border-radius: 20px;
@@ -139,9 +139,11 @@
     background: var(--surface2);
     color: var(--text-muted);
     transition: all 0.15s;
+    user-select: none;
   }
   .filter-chip:hover { border-color: var(--accent); color: var(--accent); }
   .filter-chip.active { background: var(--accent); border-color: var(--accent); color: white; }
+  .filter-chip.alle { border-style: dashed; }
   .filter-select {
     padding: 4px 10px;
     border-radius: 20px;
@@ -199,7 +201,7 @@
   .badge-status-uitvoering { background: #dcfce7; color: #15803d; }
   .badge-status-klaar { background: #ede9fe; color: #5b21b6; }
   .badge-thema { background: #ccfbf1; color: var(--teal); }
-  .badge-team { background: #fce7f3; color: var(--pink); }
+  .badge-aandachtsgebied { background: #fce7f3; color: var(--pink); }
   .badge-bu { background: #dbeafe; color: #1e40af; }
 
   .card-wsjf { display: flex; align-items: center; gap: 14px; }
@@ -209,6 +211,7 @@
     font-weight: 500;
     color: var(--accent);
     line-height: 1;
+    cursor: default;
   }
   .wsjf-score-label { font-size: 10px; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.5px; }
   .wsjf-breakdown { display: flex; gap: 10px; }
@@ -237,6 +240,8 @@
     opacity: 0;
     transition: opacity 0.15s;
     word-break: break-word;
+    white-space: pre-line;
+    font-family: 'DM Mono', monospace;
   }
 
   /* ─── TABLE ─── */
@@ -267,7 +272,14 @@
   tbody tr:hover { background: var(--surface2); }
   tbody td { padding: 12px 14px; font-size: 13px; }
   .td-name { font-weight: 500; display: flex; align-items: center; gap: 8px; }
-  .wsjf-mono { font-family: 'DM Mono', monospace; color: var(--accent); font-weight: 500; }
+  .wsjf-mono {
+    font-family: 'DM Mono', monospace;
+    color: var(--accent);
+    font-weight: 500;
+    cursor: default;
+    border-bottom: 1px dashed var(--accent);
+    padding-bottom: 1px;
+  }
 
   /* ─── BEHEER PANEL ─── */
   .beheer-panel {
@@ -289,6 +301,7 @@
   .beheer-tabs {
     display: flex;
     border-bottom: 1px solid var(--border);
+    flex-wrap: wrap;
   }
   .beheer-tab {
     padding: 12px 20px;
@@ -392,7 +405,7 @@
 
   .form-actions { display: flex; gap: 10px; margin-top: 20px; padding-top: 20px; border-top: 1px solid var(--border); }
 
-  /* ─── THEMA BEHEER ─── */
+  /* ─── THEMA / AANDACHTSGEBIED BEHEER ─── */
   .thema-list { display: flex; flex-direction: column; gap: 8px; margin-bottom: 16px; }
   .thema-item {
     display: flex;
@@ -564,9 +577,13 @@
       <div id="filter-status"></div>
     </div>
     <div class="filter-group">
+      <span class="filter-label">Aandachtsgebied</span>
+      <div id="filter-aandachtsgebied"></div>
+    </div>
+    <div class="filter-group">
       <span class="filter-label">Thema</span>
       <select class="filter-select" id="filter-thema" onchange="setFilterSelect(this,'thema')"></select>
-      <span class="filter-label" style="margin-left:16px">BU</span>
+      <span class="filter-label" style="min-width:auto;margin-left:16px">BU</span>
       <select class="filter-select" id="filter-bu" onchange="setFilterSelect(this,'bu')"></select>
     </div>
   </div>
@@ -590,9 +607,9 @@
             <th onclick="sortTable('status')" id="th-status">Status <span class="sort-icon" id="si-status">↕</span></th>
             <th onclick="sortTable('thema')" id="th-thema">Thema <span class="sort-icon" id="si-thema">↕</span></th>
             <th onclick="sortTable('business_unit')" id="th-business_unit">Business Unit <span class="sort-icon" id="si-business_unit">↕</span></th>
-            <th onclick="sortTable('team')" id="th-team">Team <span class="sort-icon" id="si-team">↕</span></th>
+            <th onclick="sortTable('aandachtsgebied')" id="th-aandachtsgebied">Aandachtsgebied <span class="sort-icon" id="si-aandachtsgebied">↕</span></th>
             <th onclick="sortTable('eigenaar')" id="th-eigenaar">Eigenaar <span class="sort-icon" id="si-eigenaar">↕</span></th>
-            <th onclick="sortTable('wsjf')" id="th-wsjf" class="sorted" title="Weighted Shortest Job First — prioriteringsscore op basis van Business Value, Time Criticality, Risk Reduction en Job Size">WSJF <span style="font-size:10px;opacity:0.6" data-note="Weighted Shortest Job First&#10;&#10;Score = (Business Value + Time Criticality + Risk Reduction) / Job Size&#10;&#10;Hoe hoger de score, hoe eerder het initiatief opgepakt moet worden.">ⓘ</span> <span class="sort-icon active" id="si-wsjf">↓</span></th>
+            <th onclick="sortTable('wsjf')" id="th-wsjf" class="sorted" title="Weighted Shortest Job First — prioriteringsscore op basis van Business Value, Time Criticality, Risk Reduction en Job Size">WSJF <span style="font-size:10px;opacity:0.6" data-note="Weighted Shortest Job First&#10;Score = (BV + TC + RR) / JS&#10;Hoe hoger de score, hoe eerder het initiatief opgepakt moet worden.">ⓘ</span> <span class="sort-icon active" id="si-wsjf">↓</span></th>
           </tr>
         </thead>
         <tbody id="table-body"></tbody>
@@ -614,6 +631,7 @@
     <div class="beheer-tabs">
       <button class="beheer-tab active" onclick="setBeheerTab('initiatieven')">Initiatieven</button>
       <button class="beheer-tab" onclick="setBeheerTab('themas')">Strategische Thema's</button>
+      <button class="beheer-tab" onclick="setBeheerTab('aandachtsgebieden')">Aandachtsgebieden</button>
       <button class="beheer-tab" onclick="setBeheerTab('beveiliging')">Beveiliging</button>
     </div>
 
@@ -663,8 +681,10 @@
             </select>
           </div>
           <div class="form-group">
-            <label for="f-team">Team</label>
-            <input type="text" id="f-team" placeholder="Team naam">
+            <label for="f-aandachtsgebied">Aandachtsgebied</label>
+            <select id="f-aandachtsgebied">
+              <option value="">— Geen —</option>
+            </select>
           </div>
           <div class="form-group">
             <label for="f-startdatum">Startdatum</label>
@@ -723,6 +743,15 @@
       <div class="thema-add">
         <input type="text" id="nieuw-thema" placeholder="Nieuw strategisch thema...">
         <button class="btn btn-primary" onclick="addThema()">+ Toevoegen</button>
+      </div>
+    </div>
+
+    <!-- Tab: Aandachtsgebieden -->
+    <div class="beheer-content hidden" id="tab-aandachtsgebieden">
+      <div class="thema-list" id="aandachtsgebied-list"></div>
+      <div class="thema-add">
+        <input type="text" id="nieuw-aandachtsgebied" placeholder="Nieuw aandachtsgebied...">
+        <button class="btn btn-primary" onclick="addAandachtsgebied()">+ Toevoegen</button>
       </div>
     </div>
 
@@ -799,6 +828,7 @@
 // ─── STATE ───────────────────────────────────────────────────────────
 let portfolio = {
   strategische_themas: ["Veiligheid", "Digitalisering", "Operational Excellence", "Duurzaamheid", "Compliance"],
+  aandachtsgebieden: ["EuA", "OPS", "Legal", "HR", "IT"],
   initiatieven: []
 };
 
@@ -809,7 +839,8 @@ let pinUnlocked = false;
 const BUSINESS_UNITS = ["Energie uit Afval", "GGC", "Digitalisering"];
 let wsjfState = { bv: 5, tc: 5, rr: 5, js: 5 };
 
-let filters = { status: "Alle", thema: "Alle", bu: "Alle" };
+// Filters: status en aandachtsgebied zijn arrays (leeg = alle tonen)
+let filters = { status: [], aandachtsgebied: [], thema: "Alle", bu: "Alle" };
 let sortCol = "wsjf";
 let sortDir = "desc";
 let currentView = "tabel";
@@ -823,24 +854,71 @@ function calcWsjf(w) {
   return Math.round(((w.business_value + w.time_criticality + w.risk_reduction) / w.job_size) * 10) / 10;
 }
 
+function wsjfTooltipText(w) {
+  const score = calcWsjf(w);
+  return `WSJF: ${score.toFixed(1)}\n(BV + TC + RR) / JS\n= (${w.business_value} + ${w.time_criticality} + ${w.risk_reduction}) / ${w.job_size}`;
+}
+
 // ─── RENDER FILTERS ──────────────────────────────────────────────────
 function renderFilters() {
-  const statusOpts = ["Alle", "Idee", "Beoordeling", "Analyse", "Goedgekeurd", "Uitvoering", "Klaar"];
-  document.getElementById("filter-status").innerHTML = statusOpts.map(s =>
-    `<span class="filter-chip ${filters.status === s ? 'active' : ''}" data-filter="status" data-value="${s}" onclick="toggleFilter(this,'status')">${s}</span>`
-  ).join('');
+  // Status — multi-select chips
+  const statusOpts = ["Idee", "Beoordeling", "Analyse", "Goedgekeurd", "Uitvoering", "Klaar"];
+  const alleStatusActive = filters.status.length === 0;
+  document.getElementById("filter-status").innerHTML =
+    `<span class="filter-chip alle ${alleStatusActive ? 'active' : ''}" onclick="clearStatusFilter()">Alle</span>` +
+    statusOpts.map(s =>
+      `<span class="filter-chip ${filters.status.includes(s) ? 'active' : ''}" onclick="toggleStatusFilter('${s}')">${s}</span>`
+    ).join('');
 
+  // Aandachtsgebied — multi-select chips
+  const alleAGActive = filters.aandachtsgebied.length === 0;
+  document.getElementById("filter-aandachtsgebied").innerHTML =
+    `<span class="filter-chip alle ${alleAGActive ? 'active' : ''}" onclick="clearAandachtsgebiedFilter()">Alle</span>` +
+    portfolio.aandachtsgebieden.map(a =>
+      `<span class="filter-chip ${filters.aandachtsgebied.includes(a) ? 'active' : ''}" onclick="toggleAandachtsgebiedFilter('${escHtml(a)}')">${escHtml(a)}</span>`
+    ).join('');
+
+  // Thema — dropdown
   const themaEl = document.getElementById("filter-thema");
   const themas = ["Alle", ...portfolio.strategische_themas];
   themaEl.innerHTML = themas.map(t => `<option value="${escHtml(t)}">${escHtml(t)}</option>`).join('');
   themaEl.value = filters.thema;
   themaEl.classList.toggle("active", filters.thema !== "Alle");
 
+  // BU — dropdown
   const buEl = document.getElementById("filter-bu");
   const bus = ["Alle", ...BUSINESS_UNITS];
   buEl.innerHTML = bus.map(b => `<option value="${escHtml(b)}">${escHtml(b)}</option>`).join('');
   buEl.value = filters.bu;
   buEl.classList.toggle("active", filters.bu !== "Alle");
+}
+
+function clearStatusFilter() {
+  filters.status = [];
+  renderFilters();
+  renderAll();
+}
+
+function toggleStatusFilter(s) {
+  const idx = filters.status.indexOf(s);
+  if (idx === -1) filters.status.push(s);
+  else filters.status.splice(idx, 1);
+  renderFilters();
+  renderAll();
+}
+
+function clearAandachtsgebiedFilter() {
+  filters.aandachtsgebied = [];
+  renderFilters();
+  renderAll();
+}
+
+function toggleAandachtsgebiedFilter(a) {
+  const idx = filters.aandachtsgebied.indexOf(a);
+  if (idx === -1) filters.aandachtsgebied.push(a);
+  else filters.aandachtsgebied.splice(idx, 1);
+  renderFilters();
+  renderAll();
 }
 
 function setFilterSelect(el, group) {
@@ -849,16 +927,11 @@ function setFilterSelect(el, group) {
   renderAll();
 }
 
-function toggleFilter(el, group) {
-  filters[group] = el.dataset.value;
-  renderFilters();
-  renderAll();
-}
-
 // ─── FILTERED & SORTED DATA ──────────────────────────────────────────
 function getFiltered() {
   return portfolio.initiatieven.filter(i => {
-    if (filters.status !== "Alle" && i.status !== filters.status) return false;
+    if (filters.status.length > 0 && !filters.status.includes(i.status)) return false;
+    if (filters.aandachtsgebied.length > 0 && !filters.aandachtsgebied.includes(i.aandachtsgebied || "")) return false;
     if (filters.thema !== "Alle" && i.thema !== filters.thema) return false;
     if (filters.bu !== "Alle" && (i.business_unit || "") !== filters.bu) return false;
     return true;
@@ -906,6 +979,7 @@ function renderCards() {
 
   grid.innerHTML = filtered.map(i => {
     const wsjf = calcWsjf(i.wsjf);
+    const wsjfNote = escHtml(wsjfTooltipText(i.wsjf));
     const noteHtml = i.notitie
       ? `<span class="note-icon" data-note="${escHtml(i.notitie)}">💬</span>`
       : "";
@@ -921,11 +995,11 @@ function renderCards() {
           <span class="badge ${statusClass(i.status)}">${escHtml(i.status)}</span>
           <span class="badge badge-thema">${escHtml(i.thema || "")}</span>
           ${i.business_unit ? `<span class="badge badge-bu">${escHtml(i.business_unit)}</span>` : ""}
-          ${i.team ? `<span class="badge badge-team">${escHtml(i.team)}</span>` : ""}
+          ${i.aandachtsgebied ? `<span class="badge badge-aandachtsgebied">${escHtml(i.aandachtsgebied)}</span>` : ""}
         </div>
         <div class="card-wsjf">
           <div>
-            <div class="wsjf-score-big">${wsjf.toFixed(1)}</div>
+            <div class="wsjf-score-big note-icon" data-note="${wsjfNote}">${wsjf.toFixed(1)}</div>
             <div class="wsjf-score-label">WSJF</div>
           </div>
           <div class="wsjf-breakdown">
@@ -962,6 +1036,7 @@ function renderTable() {
 
   tbody.innerHTML = filtered.map(i => {
     const wsjf = calcWsjf(i.wsjf);
+    const wsjfNote = escHtml(wsjfTooltipText(i.wsjf));
     const noteHtml = i.notitie ? `<span class="note-icon" data-note="${escHtml(i.notitie)}">💬</span>` : "";
     return `
     <tr>
@@ -969,9 +1044,9 @@ function renderTable() {
       <td><span class="badge ${statusClass(i.status)}">${escHtml(i.status)}</span></td>
       <td><span class="badge badge-thema">${escHtml(i.thema || "")}</span></td>
       <td>${i.business_unit ? `<span class="badge badge-bu">${escHtml(i.business_unit)}</span>` : "—"}</td>
-      <td>${escHtml(i.team || "—")}</td>
+      <td>${i.aandachtsgebied ? `<span class="badge badge-aandachtsgebied">${escHtml(i.aandachtsgebied)}</span>` : "—"}</td>
       <td>${escHtml(i.eigenaar || "—")}</td>
-      <td><span class="wsjf-mono">${wsjf.toFixed(1)}</span></td>
+      <td><span class="wsjf-mono note-icon" data-note="${wsjfNote}">${wsjf.toFixed(1)}</span></td>
     </tr>`;
   }).join('');
 }
@@ -979,7 +1054,7 @@ function renderTable() {
 function sortTable(col) {
   if (sortCol === col) { sortDir = sortDir === "asc" ? "desc" : "asc"; }
   else { sortCol = col; sortDir = col === "wsjf" ? "desc" : "asc"; }
-  ["naam","status","thema","business_unit","team","eigenaar","wsjf"].forEach(c => {
+  ["naam","status","thema","business_unit","aandachtsgebied","eigenaar","wsjf"].forEach(c => {
     const th = document.getElementById("th-" + c);
     const si = document.getElementById("si-" + c);
     if (th) th.classList.toggle("sorted", c === sortCol);
@@ -1050,7 +1125,8 @@ function checkPin() {
   if (pinBuffer === getStoredPin()) {
     closePinModal();
     pinUnlocked = true;
-    openBeheer();
+    if (pinCallback) { const cb = pinCallback; pinCallback = null; cb(); }
+    else openBeheer();
   } else {
     for (let i = 0; i < 4; i++) document.getElementById("pd" + i).classList.add("error");
     document.getElementById("pin-error").textContent = "Onjuiste pincode";
@@ -1091,17 +1167,19 @@ function openBeheer() {
   document.getElementById("btn-beheer").textContent = "✕ Sluiten";
   renderBeheerList();
   renderThemas();
+  renderAandachtsgebieden();
 }
 
 function setBeheerTab(tab) {
   activeBeheerTab = tab;
-  ["initiatieven","themas","beveiliging"].forEach(t => {
+  ["initiatieven","themas","aandachtsgebieden","beveiliging"].forEach(t => {
     document.getElementById("tab-" + t).classList.toggle("hidden", tab !== t);
   });
   document.querySelectorAll(".beheer-tab").forEach((el, i) => {
-    el.classList.toggle("active", ["initiatieven","themas","beveiliging"][i] === tab);
+    el.classList.toggle("active", ["initiatieven","themas","aandachtsgebieden","beveiliging"][i] === tab);
   });
   if (tab === "themas") renderThemas();
+  if (tab === "aandachtsgebieden") renderAandachtsgebieden();
 }
 
 function renderBeheerList() {
@@ -1111,6 +1189,7 @@ function renderBeheerList() {
       <div class="beheer-item-info">
         <span class="beheer-item-name">${escHtml(i.naam)}</span>
         <span class="badge ${statusClass(i.status)}">${escHtml(i.status)}</span>
+        ${i.aandachtsgebied ? `<span class="badge badge-aandachtsgebied">${escHtml(i.aandachtsgebied)}</span>` : ""}
       </div>
       <div class="beheer-item-actions">
         <button class="btn btn-secondary btn-sm" onclick="openForm(${i.id})">✏️ Bewerken</button>
@@ -1127,8 +1206,13 @@ function openForm(id) {
   const title = document.getElementById("form-title");
 
   // fill thema dropdown
-  const sel = document.getElementById("f-thema");
-  sel.innerHTML = portfolio.strategische_themas.map(t => `<option>${escHtml(t)}</option>`).join('');
+  const selThema = document.getElementById("f-thema");
+  selThema.innerHTML = portfolio.strategische_themas.map(t => `<option>${escHtml(t)}</option>`).join('');
+
+  // fill aandachtsgebied dropdown
+  const selAG = document.getElementById("f-aandachtsgebied");
+  selAG.innerHTML = `<option value="">— Geen —</option>` +
+    portfolio.aandachtsgebieden.map(a => `<option>${escHtml(a)}</option>`).join('');
 
   if (id === null) {
     title.textContent = "Nieuw initiatief";
@@ -1137,7 +1221,7 @@ function openForm(id) {
     document.getElementById("f-status").value = "Idee";
     document.getElementById("f-eigenaar").value = "";
     document.getElementById("f-bu").value = "";
-    document.getElementById("f-team").value = "";
+    document.getElementById("f-aandachtsgebied").value = "";
     document.getElementById("f-startdatum").value = "";
     document.getElementById("f-notitie").value = "";
     wsjfState = { bv: 5, tc: 5, rr: 5, js: 5 };
@@ -1149,7 +1233,7 @@ function openForm(id) {
     document.getElementById("f-status").value = i.status;
     document.getElementById("f-eigenaar").value = i.eigenaar || "";
     document.getElementById("f-bu").value = i.business_unit || "";
-    document.getElementById("f-team").value = i.team || "";
+    document.getElementById("f-aandachtsgebied").value = i.aandachtsgebied || "";
     document.getElementById("f-startdatum").value = i.startdatum || "";
     document.getElementById("f-notitie").value = i.notitie || "";
     // snap to nearest fibonacci value
@@ -1160,7 +1244,7 @@ function openForm(id) {
       rr: snap(i.wsjf.risk_reduction),
       js: snap(i.wsjf.job_size),
     };
-    sel.value = i.thema;
+    selThema.value = i.thema;
   }
   // update val displays
   ["bv","tc","rr","js"].forEach(k => { document.getElementById("val-" + k).textContent = wsjfState[k]; });
@@ -1203,8 +1287,6 @@ function updateWsjfCalc() {
   document.getElementById("form-wsjf-score").textContent = score.toFixed(1);
 }
 
-function updateWsjfForm() { updateWsjfCalc(); }
-
 function saveInitiatief() {
   const naam = document.getElementById("f-naam").value.trim();
   if (!naam) { document.getElementById("f-naam").focus(); document.getElementById("f-naam").style.borderColor = "var(--red)"; return; }
@@ -1216,7 +1298,7 @@ function saveInitiatief() {
     status: document.getElementById("f-status").value,
     eigenaar: document.getElementById("f-eigenaar").value.trim(),
     business_unit: document.getElementById("f-bu").value,
-    team: document.getElementById("f-team").value.trim(),
+    aandachtsgebied: document.getElementById("f-aandachtsgebied").value,
     thema: document.getElementById("f-thema").value,
     startdatum: document.getElementById("f-startdatum").value,
     notitie: document.getElementById("f-notitie").value.trim(),
@@ -1286,7 +1368,6 @@ function addThema() {
   input.style.borderColor = "";
   renderThemas();
   renderFilters();
-  // update thema dropdown in form if open
   const sel = document.getElementById("f-thema");
   if (sel) sel.innerHTML = portfolio.strategische_themas.map(t => `<option>${escHtml(t)}</option>`).join('');
   savePortfolioRemote();
@@ -1304,19 +1385,57 @@ function removeThema(idx) {
   savePortfolioRemote();
 }
 
-// ─── VERCEL BLOB SYNC ─────────────────────────────────────────────────
-async function loadFromGithub() {
-  try {
-    const res = await fetch("/api/portfolio", { cache: "no-store" });
-    if (!res.ok) throw new Error(`Server fout ${res.status}`);
-    const text = await res.text();
-    loadPortfolio(text);
-    showSaveMsg("Geladen ✓", "green");
-  } catch(e) {
-    showSaveMsg(`Laden mislukt: ${e.message}`, "red");
-  }
+// ─── AANDACHTSGEBIEDEN ────────────────────────────────────────────────
+function renderAandachtsgebieden() {
+  const list = document.getElementById("aandachtsgebied-list");
+  list.innerHTML = portfolio.aandachtsgebieden.map((a, idx) => {
+    const inUse = portfolio.initiatieven.some(i => i.aandachtsgebied === a);
+    return `
+    <div class="thema-item">
+      <span style="font-size:14px">${escHtml(a)}</span>
+      <div style="display:flex;align-items:center;gap:8px">
+        ${inUse ? '<span style="font-size:11px;color:var(--text-muted)">In gebruik</span>' : ''}
+        <button class="btn btn-danger btn-sm" onclick="removeAandachtsgebied(${idx})" ${inUse ? 'title="Dit aandachtsgebied is in gebruik bij een of meer initiatieven"' : ''}>✕</button>
+      </div>
+    </div>`;
+  }).join('') || '<p style="color:var(--text-muted);font-size:13px">Geen aandachtsgebieden gedefinieerd.</p>';
 }
 
+function addAandachtsgebied() {
+  const input = document.getElementById("nieuw-aandachtsgebied");
+  const val = input.value.trim();
+  if (!val) return;
+  if (portfolio.aandachtsgebieden.includes(val)) { input.style.borderColor = "var(--orange)"; return; }
+  portfolio.aandachtsgebieden.push(val);
+  input.value = "";
+  input.style.borderColor = "";
+  renderAandachtsgebieden();
+  renderFilters();
+  // update aandachtsgebied dropdown in form if open
+  const sel = document.getElementById("f-aandachtsgebied");
+  if (sel) {
+    sel.innerHTML = `<option value="">— Geen —</option>` +
+      portfolio.aandachtsgebieden.map(a => `<option>${escHtml(a)}</option>`).join('');
+  }
+  savePortfolioRemote();
+}
+
+function removeAandachtsgebied(idx) {
+  const a = portfolio.aandachtsgebieden[idx];
+  const inUse = portfolio.initiatieven.some(i => i.aandachtsgebied === a);
+  if (inUse) {
+    if (!confirm(`Aandachtsgebied "${a}" is in gebruik bij een of meer initiatieven. Weet je zeker dat je het wilt verwijderen?`)) return;
+  }
+  portfolio.aandachtsgebieden.splice(idx, 1);
+  // also clear from active filter
+  const fi = filters.aandachtsgebied.indexOf(a);
+  if (fi !== -1) filters.aandachtsgebied.splice(fi, 1);
+  renderAandachtsgebieden();
+  renderFilters();
+  savePortfolioRemote();
+}
+
+// ─── VERCEL BLOB SYNC ─────────────────────────────────────────────────
 async function savePortfolioRemote() {
   try {
     const res = await fetch("/api/portfolio", {
@@ -1331,23 +1450,15 @@ async function savePortfolioRemote() {
   }
 }
 
-function downloadJSON() {
-  const blob = new Blob([JSON.stringify(portfolio, null, 2)], { type: 'application/json' });
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  a.href = url; a.download = 'portfolio.json';
-  a.click();
-  URL.revokeObjectURL(url);
-}
-
 function loadPortfolio(text) {
   try {
     const data = JSON.parse(text);
     if (data.strategische_themas) portfolio.strategische_themas = data.strategische_themas;
+    if (data.aandachtsgebieden) portfolio.aandachtsgebieden = data.aandachtsgebieden;
     if (data.initiatieven) portfolio.initiatieven = data.initiatieven;
-    filters = { status: "Alle", thema: "Alle", bu: "Alle" };
+    filters = { status: [], aandachtsgebied: [], thema: "Alle", bu: "Alle" };
     renderAll();
-    if (beheerOpen) { renderBeheerList(); renderThemas(); }
+    if (beheerOpen) { renderBeheerList(); renderThemas(); renderAandachtsgebieden(); }
   } catch (e) {
     showSaveMsg("Kon bestand niet laden: ongeldige JSON.", "red");
   }
@@ -1374,20 +1485,6 @@ function requirePin(cb) {
   openPinModal();
 }
 
-// Override checkPin to support callback flow
-checkPin = function() {
-  if (pinBuffer === getStoredPin()) {
-    closePinModal();
-    pinUnlocked = true;
-    if (pinCallback) { const cb = pinCallback; pinCallback = null; cb(); }
-    else openBeheer();
-  } else {
-    for (let i = 0; i < 4; i++) document.getElementById("pd" + i).classList.add("error");
-    document.getElementById("pin-error").textContent = "Onjuiste pincode";
-    setTimeout(() => { pinBuffer = ""; updatePinDots(); document.getElementById("pin-error").textContent = ""; }, 800);
-  }
-};
-
 document.getElementById("confirm-modal").addEventListener("click", function(e) {
   if (e.target === this) closeModal();
 });
@@ -1405,19 +1502,19 @@ document.addEventListener("keydown", function(e) {
 // ─── GLOBAL TOOLTIP ──────────────────────────────────────────────────
 const gtt = document.getElementById("global-tooltip");
 document.addEventListener("mouseover", function(e) {
-  const icon = e.target.closest(".note-icon[data-note]");
+  const icon = e.target.closest("[data-note]");
   if (!icon) return;
   gtt.textContent = icon.dataset.note;
   gtt.style.opacity = "1";
   positionTooltip(icon);
 });
 document.addEventListener("mouseout", function(e) {
-  if (!e.target.closest(".note-icon[data-note]")) return;
+  if (!e.target.closest("[data-note]")) return;
   gtt.style.opacity = "0";
 });
 document.addEventListener("mousemove", function(e) {
   if (gtt.style.opacity !== "1") return;
-  const icon = e.target.closest(".note-icon[data-note]");
+  const icon = e.target.closest("[data-note]");
   if (icon) positionTooltip(icon);
 });
 function positionTooltip(icon) {
@@ -1433,17 +1530,15 @@ function positionTooltip(icon) {
 }
 
 // ─── INIT ─────────────────────────────────────────────────────────────
-// Load demo data
 portfolio.initiatieven = [
   {
     id: 1,
     naam: "Digitaal onboarding platform",
     omschrijving: "Vervanging van papieren onboardingproces door een volledig digitaal platform voor nieuwe medewerkers.",
     status: "Uitvoering",
-
     eigenaar: "Lisa de Vries",
     business_unit: "Digitalisering",
-    team: "EuA",
+    aandachtsgebied: "EuA",
     thema: "Digitalisering",
     startdatum: "2025-02-01",
     wsjf: { business_value: 8, time_criticality: 8, risk_reduction: 5, job_size: 5 },
@@ -1454,10 +1549,9 @@ portfolio.initiatieven = [
     naam: "CO₂-reductie meetinfrastructuur",
     omschrijving: "Implementatie van real-time monitoring voor CO₂-uitstoot over alle locaties.",
     status: "Analyse",
-
     eigenaar: "Marc Janssen",
     business_unit: "Energie uit Afval",
-    team: "OPS",
+    aandachtsgebied: "OPS",
     thema: "Duurzaamheid",
     startdatum: "2025-04-01",
     wsjf: { business_value: 8, time_criticality: 8, risk_reduction: 8, job_size: 8 },
@@ -1468,10 +1562,9 @@ portfolio.initiatieven = [
     naam: "AVG compliance audit",
     omschrijving: "Volledige audit van gegevensverwerkingsprocessen conform nieuwe AVG-richtlijnen.",
     status: "Uitvoering",
-
     eigenaar: "Sarah Bos",
     business_unit: "GGC",
-    team: "Legal",
+    aandachtsgebied: "Legal",
     thema: "Compliance",
     startdatum: "2025-01-15",
     wsjf: { business_value: 8, time_criticality: 13, risk_reduction: 13, job_size: 5 },
@@ -1482,10 +1575,9 @@ portfolio.initiatieven = [
     naam: "Veiligheidstraining verplicht",
     omschrijving: "Jaarlijkse verplichte veiligheidstraining voor alle medewerkers op de werkvloer.",
     status: "Klaar",
-
     eigenaar: "Tom Bakker",
     business_unit: "Energie uit Afval",
-    team: "HR",
+    aandachtsgebied: "HR",
     thema: "Veiligheid",
     startdatum: "2025-01-01",
     wsjf: { business_value: 5, time_criticality: 8, risk_reduction: 8, job_size: 3 },
@@ -1496,10 +1588,9 @@ portfolio.initiatieven = [
     naam: "Process mining implementatie",
     omschrijving: "Gebruik van process mining tools om knelpunten in operationele processen te identificeren.",
     status: "Idee",
-
     eigenaar: "Anna Smit",
     business_unit: "GGC",
-    team: "EuA",
+    aandachtsgebied: "EuA",
     thema: "Operational Excellence",
     startdatum: "",
     wsjf: { business_value: 5, time_criticality: 3, risk_reduction: 3, job_size: 8 },
@@ -1510,10 +1601,9 @@ portfolio.initiatieven = [
     naam: "Single Sign-On uitrol",
     omschrijving: "Centrale authenticatie voor alle interne applicaties via SSO-platform.",
     status: "Goedgekeurd",
-
     eigenaar: "Kevin Hoek",
     business_unit: "Digitalisering",
-    team: "IT",
+    aandachtsgebied: "IT",
     thema: "Digitalisering",
     startdatum: "2025-03-01",
     wsjf: { business_value: 8, time_criticality: 5, risk_reduction: 8, job_size: 5 },
