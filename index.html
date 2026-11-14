@@ -379,7 +379,7 @@
   .drawer-footer { padding: 14px 24px; border-top: 1px solid var(--border); display: flex; align-items: center; gap: 8px; background: var(--surface2); }
   .drawer-footer .spacer { flex: 1; }
 
-  .drawer-tabs { display: flex; border-bottom: 1px solid var(--border); padding: 0 12px; }
+  .drawer-tabs { display: flex; border-bottom: 1px solid var(--border); padding: 0 12px; overflow-x: auto; white-space: nowrap; }
   .beheer-tab {
     padding: 12px 14px;
     font-size: 13px;
@@ -677,12 +677,7 @@
       </div>
       <div class="form-group">
         <label for="f-bu">Business Unit</label>
-        <select id="f-bu">
-          <option value="">— Geen —</option>
-          <option>Energie uit Afval</option>
-          <option>GGC</option>
-          <option>Digitalisering</option>
-        </select>
+        <select id="f-bu"></select>
       </div>
       <div class="form-group">
         <label for="f-startdatum">Startdatum</label>
@@ -745,8 +740,9 @@
     <button class="icon-btn" onclick="closeDrawers()" title="Sluiten (Esc)">✕</button>
   </div>
   <div class="drawer-tabs">
-    <button class="beheer-tab active" data-tab="themas" onclick="setBeheerTab('themas')">Strategische thema's</button>
+    <button class="beheer-tab active" data-tab="themas" onclick="setBeheerTab('themas')">Thema's</button>
     <button class="beheer-tab" data-tab="aandachtsgebieden" onclick="setBeheerTab('aandachtsgebieden')">Aandachtsgebieden</button>
+    <button class="beheer-tab" data-tab="bus" onclick="setBeheerTab('bus')">Business Units</button>
     <button class="beheer-tab" data-tab="beveiliging" onclick="setBeheerTab('beveiliging')">Beveiliging</button>
   </div>
   <div class="drawer-body">
@@ -762,6 +758,13 @@
       <div class="thema-add">
         <input type="text" id="nieuw-aandachtsgebied" placeholder="Nieuw aandachtsgebied..." onkeydown="if(event.key==='Enter')addAandachtsgebied()">
         <button class="btn btn-primary" onclick="addAandachtsgebied()">+ Toevoegen</button>
+      </div>
+    </div>
+    <div id="tab-bus" class="hidden">
+      <div class="thema-list" id="bu-list"></div>
+      <div class="thema-add">
+        <input type="text" id="nieuw-bu" placeholder="Nieuwe business unit..." onkeydown="if(event.key==='Enter')addBU()">
+        <button class="btn btn-primary" onclick="addBU()">+ Toevoegen</button>
       </div>
     </div>
     <div id="tab-beveiliging" class="hidden">
@@ -830,7 +833,8 @@ let portfolio = {
 
 const FIBONACCI = [1, 2, 3, 5, 8, 13, 21];
 const DEFAULT_PIN = "1234";
-const BUSINESS_UNITS = ["Energie uit Afval", "GGC", "Digitalisering"];
+const DEFAULT_BUSINESS_UNITS = ["Energie uit Afval", "GGC", "Digitalisering", "Warmte"];
+portfolio.business_units = [...DEFAULT_BUSINESS_UNITS];
 const STATUS_OPEN = ["Idee", "Beoordeling", "Analyse", "Goedgekeurd", "Uitvoering"];
 const STATUS_ALL = [...STATUS_OPEN, "Klaar"];
 
@@ -961,7 +965,7 @@ function renderFilters() {
   themaEl.classList.toggle("active", filters.thema !== "Alle");
 
   const buEl = document.getElementById("filter-bu");
-  buEl.innerHTML = ["Alle", ...BUSINESS_UNITS].map(b => `<option value="${escHtml(b)}">${escHtml(b)}</option>`).join('');
+  buEl.innerHTML = ["Alle", ...portfolio.business_units].map(b => `<option value="${escHtml(b)}">${escHtml(b)}</option>`).join('');
   buEl.value = filters.bu;
   buEl.classList.toggle("active", filters.bu !== "Alle");
 
@@ -1275,11 +1279,12 @@ function openBeheer() {
   requirePin(() => {
     renderThemas();
     renderAandachtsgebieden();
+    renderBUs();
     showDrawer("beheer-drawer");
   });
 }
 function setBeheerTab(tab) {
-  ["themas", "aandachtsgebieden", "beveiliging"].forEach(t =>
+  ["themas", "aandachtsgebieden", "bus", "beveiliging"].forEach(t =>
     document.getElementById("tab-" + t).classList.toggle("hidden", tab !== t));
   document.querySelectorAll(".beheer-tab").forEach(el => el.classList.toggle("active", el.dataset.tab === tab));
 }
@@ -1293,6 +1298,7 @@ function openForm(id) {
   selThema.innerHTML = portfolio.strategische_themas.map(t => `<option>${escHtml(t)}</option>`).join('');
   const selAG = document.getElementById("f-aandachtsgebied");
   selAG.innerHTML = `<option value="">— Geen —</option>` + portfolio.aandachtsgebieden.map(a => `<option>${escHtml(a)}</option>`).join('');
+  document.getElementById("f-bu").innerHTML = `<option value="">— Geen —</option>` + portfolio.business_units.map(b => `<option>${escHtml(b)}</option>`).join('');
 
   const eyebrow = document.getElementById("form-eyebrow");
   document.getElementById("drawer-delete").classList.toggle("hidden", id === null);
@@ -1522,6 +1528,38 @@ function removeAandachtsgebied(idx) {
   savePortfolioRemote();
 }
 
+// ─── BUSINESS UNITS ───────────────────────────────────────────────────
+function renderBUs() {
+  document.getElementById("bu-list").innerHTML = portfolio.business_units.map((b, idx) => {
+    const n = portfolio.initiatieven.filter(i => i.business_unit === b).length;
+    return `<div class="thema-item">
+      <span style="font-size:14px">${escHtml(b)}</span>
+      <div style="display:flex;align-items:center;gap:10px">
+        ${n ? `<span class="in-use">${n} in gebruik</span>` : ''}
+        <button class="icon-btn danger" onclick="removeBU(${idx})" data-note="Verwijderen">✕</button>
+      </div></div>`;
+  }).join('') || '<p style="color:var(--text-muted);font-size:13px">Geen business units gedefinieerd.</p>';
+}
+function addBU() {
+  const input = document.getElementById("nieuw-bu");
+  const val = input.value.trim();
+  if (!val) return;
+  if (portfolio.business_units.includes(val)) { input.style.borderColor = "var(--orange)"; return; }
+  portfolio.business_units.push(val);
+  input.value = ""; input.style.borderColor = "";
+  renderBUs(); renderAll();
+  savePortfolioRemote();
+}
+function removeBU(idx) {
+  const b = portfolio.business_units[idx];
+  if (portfolio.initiatieven.some(i => i.business_unit === b) &&
+      !confirm(`Business unit "${b}" is in gebruik bij een of meer initiatieven. Weet je zeker dat je hem wilt verwijderen?`)) return;
+  portfolio.business_units.splice(idx, 1);
+  if (filters.bu === b) filters.bu = "Alle";
+  renderBUs(); renderAll();
+  savePortfolioRemote();
+}
+
 // ─── VERCEL BLOB SYNC ─────────────────────────────────────────────────
 async function savePortfolioRemote(silent = false) {
   try {
@@ -1544,6 +1582,8 @@ function loadPortfolio(text) {
     const data = JSON.parse(text);
     if (data.strategische_themas) portfolio.strategische_themas = data.strategische_themas;
     if (data.aandachtsgebieden) portfolio.aandachtsgebieden = data.aandachtsgebieden;
+    // Business units: uit opslag, of standaardlijst (incl. Warmte) bij eerste keer
+    portfolio.business_units = Array.isArray(data.business_units) ? data.business_units : [...DEFAULT_BUSINESS_UNITS];
     if (data.initiatieven) portfolio.initiatieven = data.initiatieven;
     // Migratie: oud veld "team" → "aandachtsgebied"
     portfolio.initiatieven.forEach(i => {
@@ -1553,6 +1593,9 @@ function loadPortfolio(text) {
       }
       if (i.aandachtsgebied && !portfolio.aandachtsgebieden.includes(i.aandachtsgebied)) {
         portfolio.aandachtsgebieden.push(i.aandachtsgebied);
+      }
+      if (i.business_unit && !portfolio.business_units.includes(i.business_unit)) {
+        portfolio.business_units.push(i.business_unit);
       }
     });
     renderAll();
