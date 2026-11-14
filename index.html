@@ -18,6 +18,7 @@
     --border: #dde1eb;
     --accent: #2563eb;
     --accent-hover: #1d4ed8;
+    --accent-soft: #eff6ff;
     --text: #1a202c;
     --text-muted: #64748b;
     --text-dim: #94a3b8;
@@ -40,6 +41,7 @@
     min-height: 100vh;
     line-height: 1.5;
   }
+  body.no-scroll { overflow: hidden; }
 
   /* ─── HEADER ─── */
   .header {
@@ -74,12 +76,9 @@
     font-size: 14px;
     transition: all 0.15s;
   }
-  .toggle-view button.active {
-    background: var(--accent);
-    color: white;
-  }
+  .toggle-view button.active { background: var(--accent); color: white; }
 
-  .header-right { display: flex; align-items: center; gap: 10px; }
+  .header-right { display: flex; align-items: center; gap: 8px; }
   .btn {
     display: inline-flex; align-items: center; gap: 6px;
     padding: 7px 14px;
@@ -87,48 +86,107 @@
     font-size: 13px;
     font-weight: 500;
     cursor: pointer;
-    border: none;
+    border: 1px solid transparent;
     transition: all 0.15s;
     font-family: 'Inter', sans-serif;
+    white-space: nowrap;
   }
   .btn-primary { background: var(--accent); color: white; }
   .btn-primary:hover { background: var(--accent-hover); }
-  .btn-secondary { background: var(--surface3); color: var(--text); border: 1px solid var(--border); }
+  .btn-secondary { background: var(--surface); color: var(--text); border-color: var(--border); }
   .btn-secondary:hover { border-color: var(--accent); color: var(--accent); }
-  .btn-danger { background: rgba(239,68,68,0.15); color: var(--red); border: 1px solid rgba(239,68,68,0.3); }
-  .btn-danger:hover { background: rgba(239,68,68,0.25); }
-  .btn-ghost { background: none; color: var(--text-muted); border: 1px solid transparent; }
+  .btn-danger { background: #fef2f2; color: var(--red); border-color: #fecaca; }
+  .btn-danger:hover { background: #fee2e2; }
+  .btn-ghost { background: none; color: var(--text-muted); }
   .btn-ghost:hover { color: var(--text); border-color: var(--border); }
   .btn-sm { padding: 5px 10px; font-size: 12px; }
-  .btn-success { background: rgba(34,197,94,0.15); color: var(--green); border: 1px solid rgba(34,197,94,0.3); }
+  .btn-lock { background: var(--surface); color: var(--text-muted); border-color: var(--border); }
+  .btn-lock:hover { color: var(--text); }
+  .btn-lock.unlocked { background: #f0fdf4; color: var(--green); border-color: #bbf7d0; }
+
+  .kbd {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    line-height: 1;
+    padding: 3px 5px;
+    border-radius: 4px;
+    border: 1px solid var(--border);
+    background: var(--surface2);
+    color: var(--text-dim);
+  }
+  .btn-primary .kbd { background: rgba(255,255,255,0.18); border-color: rgba(255,255,255,0.3); color: rgba(255,255,255,0.85); }
 
   /* ─── MAIN ─── */
   .main { max-width: 1400px; margin: 0 auto; padding: 24px; }
 
   /* ─── STATS ─── */
-  .stats-bar {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 12px;
-    margin-bottom: 20px;
-  }
-  .stat-card {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    padding: 16px 20px;
-  }
+  .stats-bar { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 20px; }
+  .stat-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 16px 20px; }
   .stat-label { font-size: 11px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.6px; color: var(--text-muted); margin-bottom: 6px; }
   .stat-value { font-family: 'DM Mono', monospace; font-size: 28px; font-weight: 500; color: var(--text); }
   .stat-value.accent { color: var(--accent); }
-  .stat-value.red { color: var(--red); }
   .stat-value.green { color: var(--green); }
-  .stat-value.yellow { color: var(--yellow); }
+
+  /* ─── TOOLBAR (scope + zoeken) ─── */
+  .toolbar { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; margin-bottom: 14px; }
+  .scope-tabs {
+    display: inline-flex;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 3px;
+    gap: 2px;
+  }
+  .scope-tab {
+    border: none;
+    background: none;
+    padding: 6px 14px;
+    border-radius: 6px;
+    font-family: 'Inter', sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text-muted);
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    transition: all 0.15s;
+  }
+  .scope-tab:hover { color: var(--text); }
+  .scope-tab .count {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    background: var(--surface2);
+    color: var(--text-muted);
+    padding: 1px 7px;
+    border-radius: 10px;
+  }
+  .scope-tab.active { background: var(--accent); color: white; }
+  .scope-tab.active .count { background: rgba(255,255,255,0.22); color: white; }
+
+  .search-box { position: relative; }
+  .search-box .s-icon { position: absolute; left: 11px; top: 50%; transform: translateY(-50%); color: var(--text-dim); font-size: 13px; pointer-events: none; }
+  .search-box .kbd { position: absolute; right: 9px; top: 50%; transform: translateY(-50%); pointer-events: none; }
+  .search-box input {
+    width: 300px;
+    padding: 8px 34px 8px 32px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    background: var(--surface);
+    font-family: 'Inter', sans-serif;
+    font-size: 13px;
+    color: var(--text);
+    transition: border-color 0.15s, box-shadow 0.15s;
+    -webkit-appearance: none;
+  }
+  .search-box input:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px rgba(37,99,235,0.12); }
+  .search-box input::-webkit-search-cancel-button { display: none; }
 
   /* ─── FILTERS ─── */
-  .filters-section { margin-bottom: 20px; }
-  .filter-group { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-bottom: 8px; }
+  .filters-section { margin-bottom: 18px; }
+  .filter-group { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; margin-bottom: 8px; }
   .filter-label { font-size: 11px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.6px; color: var(--text-dim); min-width: 112px; }
+  .chips { display: flex; gap: 6px; flex-wrap: wrap; }
   .filter-chip {
     padding: 4px 12px;
     border-radius: 20px;
@@ -136,7 +194,7 @@
     font-weight: 500;
     cursor: pointer;
     border: 1px solid var(--border);
-    background: var(--surface2);
+    background: var(--surface);
     color: var(--text-muted);
     transition: all 0.15s;
     user-select: none;
@@ -154,46 +212,29 @@
     background: var(--surface);
     color: var(--text);
     cursor: pointer;
-    transition: border-color 0.15s;
     width: auto;
     min-width: 140px;
     max-width: 260px;
   }
   .filter-select:focus { outline: none; border-color: var(--accent); }
   .filter-select.active { border-color: var(--accent); color: var(--accent); font-weight: 600; }
-
-  /* ─── CARD GRID ─── */
-  .cards-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
-    gap: 16px;
-  }
-
-  .initiative-card {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    overflow: hidden;
-    display: flex;
-    transition: border-color 0.15s, transform 0.15s;
-  }
-  .initiative-card:hover { border-color: var(--border); transform: translateY(-1px); box-shadow: var(--shadow); }
-
-  .card-accent-bar { width: 4px; flex-shrink: 0; background: var(--accent); }
-
-  .card-body { padding: 16px; flex: 1; min-width: 0; }
-  .card-header { display: flex; align-items: flex-start; justify-content: space-between; gap: 8px; margin-bottom: 6px; }
-  .card-title { font-size: 15px; font-weight: 600; line-height: 1.3; }
-  .card-desc { font-size: 13px; color: var(--text-muted); margin-bottom: 12px; line-height: 1.5; }
-
-  .badges { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 14px; }
-  .badge {
-    padding: 2px 8px;
-    border-radius: 4px;
-    font-size: 11px;
+  .clear-filters {
+    margin-left: auto;
+    background: none;
+    border: none;
+    color: var(--accent);
+    font-family: 'Inter', sans-serif;
+    font-size: 12px;
     font-weight: 500;
-    letter-spacing: 0.2px;
+    cursor: pointer;
+    padding: 4px 8px;
+    border-radius: 4px;
   }
+  .clear-filters:hover { background: var(--accent-soft); }
+
+  /* ─── BADGES ─── */
+  .badges { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 14px; }
+  .badge { padding: 2px 8px; border-radius: 4px; font-size: 11px; font-weight: 500; letter-spacing: 0.2px; white-space: nowrap; }
   .badge-status-idee { background: #e2e8f0; color: #475569; }
   .badge-status-beoordeling { background: #fef9c3; color: #854d0e; }
   .badge-status-analyse { background: #dbeafe; color: #1e40af; }
@@ -204,35 +245,67 @@
   .badge-aandachtsgebied { background: #fce7f3; color: var(--pink); }
   .badge-bu { background: #dbeafe; color: #1e40af; }
 
-  .card-wsjf { display: flex; align-items: center; gap: 14px; }
-  .wsjf-score-big {
-    font-family: 'DM Mono', monospace;
-    font-size: 26px;
-    font-weight: 500;
-    color: var(--accent);
-    line-height: 1;
-    cursor: default;
+  /* ─── ICON BUTTONS / ROW ACTIONS ─── */
+  .icon-btn {
+    width: 30px; height: 30px;
+    display: inline-flex; align-items: center; justify-content: center;
+    border-radius: 6px;
+    border: 1px solid transparent;
+    background: none;
+    cursor: pointer;
+    color: var(--text-muted);
+    font-size: 14px;
+    transition: all 0.12s;
   }
+  .icon-btn:hover { background: var(--surface); border-color: var(--border); color: var(--text); }
+  .icon-btn.success:hover { color: var(--green); border-color: #bbf7d0; background: #f0fdf4; }
+  .icon-btn.danger:hover { color: var(--red); border-color: #fecaca; background: #fef2f2; }
+  .row-actions { display: inline-flex; gap: 2px; opacity: 0; transition: opacity 0.12s; }
+  tbody tr:hover .row-actions, tbody tr:focus-within .row-actions, .initiative-card:hover .row-actions { opacity: 1; }
+  @media (hover: none) { .row-actions { opacity: 1; } }
+
+  @keyframes flash-row { from { background: #dbeafe; } to { background: transparent; } }
+  @keyframes flash-card { from { box-shadow: 0 0 0 3px rgba(37,99,235,0.45); } to { box-shadow: 0 0 0 3px rgba(37,99,235,0); } }
+
+  /* ─── CARD GRID ─── */
+  .cards-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 16px; }
+  .initiative-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    overflow: hidden;
+    display: flex;
+    cursor: pointer;
+    transition: transform 0.15s, box-shadow 0.15s;
+  }
+  .initiative-card:hover { transform: translateY(-1px); box-shadow: var(--shadow); }
+  .initiative-card.flash { animation: flash-card 1.6s ease-out; }
+  .initiative-card.is-klaar { opacity: 0.65; }
+  .card-accent-bar { width: 4px; flex-shrink: 0; background: var(--accent); }
+  .initiative-card.is-klaar .card-accent-bar, .scope-afgerond .card-accent-bar { background: var(--purple); }
+  .card-body { padding: 16px; flex: 1; min-width: 0; }
+  .card-header { display: flex; align-items: flex-start; justify-content: space-between; gap: 8px; margin-bottom: 6px; }
+  .card-title { font-size: 15px; font-weight: 600; line-height: 1.3; }
+  .card-desc { font-size: 13px; color: var(--text-muted); margin-bottom: 12px; line-height: 1.5; }
+  .card-wsjf { display: flex; align-items: center; gap: 14px; }
+  .wsjf-score-big { font-family: 'DM Mono', monospace; font-size: 26px; font-weight: 500; color: var(--accent); line-height: 1; cursor: help; }
   .wsjf-score-label { font-size: 10px; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.5px; }
   .wsjf-breakdown { display: flex; gap: 10px; }
   .wsjf-item { text-align: center; }
   .wsjf-item-val { font-family: 'DM Mono', monospace; font-size: 14px; font-weight: 500; color: var(--text); line-height: 1; }
   .wsjf-item-lbl { font-size: 9px; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.4px; }
-
-  .card-footer { display: flex; align-items: center; justify-content: space-between; margin-top: 14px; padding-top: 12px; border-top: 1px solid var(--border); }
+  .card-footer { display: flex; align-items: center; justify-content: space-between; margin-top: 14px; padding-top: 12px; border-top: 1px solid var(--border); min-height: 43px; }
   .card-meta { font-size: 11px; color: var(--text-dim); }
-  .card-actions { display: flex; gap: 6px; }
 
   .note-icon { cursor: default; }
   #global-tooltip {
     position: fixed;
     background: #1e293b;
-    border: none;
     border-radius: var(--radius-sm);
-    padding: 8px 12px;
+    padding: 7px 11px;
     font-size: 12px;
     color: #f1f5f9;
-    max-width: 260px;
+    max-width: 280px;
     line-height: 1.5;
     z-index: 9999;
     box-shadow: 0 4px 16px rgba(0,0,0,0.18);
@@ -241,15 +314,14 @@
     transition: opacity 0.15s;
     word-break: break-word;
     white-space: pre-line;
-    font-family: 'DM Mono', monospace;
   }
 
   /* ─── TABLE ─── */
-  .table-wrap { overflow-x: auto; }
+  .table-wrap { overflow-x: auto; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); }
   table { width: 100%; border-collapse: collapse; }
   thead th {
     text-align: left;
-    padding: 10px 14px;
+    padding: 11px 14px;
     font-size: 11px;
     font-weight: 600;
     text-transform: uppercase;
@@ -263,94 +335,74 @@
   }
   thead th:hover { color: var(--text); }
   thead th.sorted { color: var(--accent); }
+  thead th.col-actions { cursor: default; }
   .sort-icon { margin-left: 4px; opacity: 0.5; }
   .sort-icon.active { opacity: 1; }
-  tbody tr {
-    border-bottom: 1px solid var(--border);
-    transition: background 0.1s;
-  }
+  tbody tr { border-bottom: 1px solid var(--border); transition: background 0.1s; cursor: pointer; }
+  tbody tr:last-child { border-bottom: none; }
   tbody tr:hover { background: var(--surface2); }
-  tbody td { padding: 12px 14px; font-size: 13px; }
+  tbody tr.flash { animation: flash-row 1.6s ease-out; }
+  tbody tr.is-klaar td { color: var(--text-dim); }
+  tbody tr.is-klaar .td-name { text-decoration: line-through; text-decoration-color: var(--text-dim); }
+  tbody td { padding: 10px 14px; font-size: 13px; vertical-align: middle; }
   .td-name { font-weight: 500; display: flex; align-items: center; gap: 8px; }
-  .wsjf-mono {
-    font-family: 'DM Mono', monospace;
-    color: var(--accent);
-    font-weight: 500;
-    cursor: default;
-    border-bottom: 1px dashed var(--accent);
-    padding-bottom: 1px;
-  }
+  .col-actions { width: 1%; white-space: nowrap; text-align: right; padding-right: 10px !important; }
+  .col-afgerond { display: none; white-space: nowrap; }
+  table.show-afgerond .col-afgerond { display: table-cell; }
+  .wsjf-mono { font-family: 'DM Mono', monospace; color: var(--accent); font-weight: 500; cursor: help; border-bottom: 1px dashed var(--accent); padding-bottom: 1px; }
 
-  /* ─── BEHEER PANEL ─── */
-  .beheer-panel {
-    margin-top: 32px;
+  /* ─── DRAWER ─── */
+  .drawer-backdrop {
+    position: fixed; inset: 0;
+    background: rgba(15,23,42,0.35);
+    opacity: 0; pointer-events: none;
+    transition: opacity 0.2s;
+    z-index: 150;
+  }
+  .drawer-backdrop.visible { opacity: 1; pointer-events: auto; }
+  .drawer {
+    position: fixed; top: 0; right: 0; bottom: 0;
+    width: min(620px, 100vw);
     background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    overflow: hidden;
-  }
-  .beheer-header {
-    padding: 16px 20px;
-    border-bottom: 1px solid var(--border);
+    box-shadow: -12px 0 40px rgba(15,23,42,0.14);
+    transform: translateX(100%);
+    transition: transform 0.26s cubic-bezier(0.2, 0.8, 0.2, 1);
+    z-index: 160;
     display: flex;
-    align-items: center;
-    justify-content: space-between;
-    background: var(--surface2);
+    flex-direction: column;
   }
-  .beheer-header h2 { font-size: 15px; font-weight: 600; }
-  .beheer-tabs {
-    display: flex;
-    border-bottom: 1px solid var(--border);
-    flex-wrap: wrap;
-  }
+  .drawer.open { transform: none; }
+  .drawer-header { padding: 18px 24px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; }
+  .drawer-eyebrow { display: flex; align-items: center; gap: 8px; font-size: 11px; text-transform: uppercase; letter-spacing: 0.6px; color: var(--text-dim); font-weight: 600; margin-bottom: 3px; min-height: 18px; }
+  .drawer-header h3 { font-size: 18px; font-weight: 600; letter-spacing: -0.2px; }
+  .drawer-body { flex: 1; overflow-y: auto; padding: 20px 24px 28px; }
+  .drawer-footer { padding: 14px 24px; border-top: 1px solid var(--border); display: flex; align-items: center; gap: 8px; background: var(--surface2); }
+  .drawer-footer .spacer { flex: 1; }
+
+  .drawer-tabs { display: flex; border-bottom: 1px solid var(--border); padding: 0 12px; }
   .beheer-tab {
-    padding: 12px 20px;
+    padding: 12px 14px;
     font-size: 13px;
     font-weight: 500;
     cursor: pointer;
     color: var(--text-muted);
+    border: none;
     border-bottom: 2px solid transparent;
     background: none;
-    border-top: none;
-    border-left: none;
-    border-right: none;
     font-family: 'Inter', sans-serif;
     transition: all 0.15s;
   }
   .beheer-tab:hover { color: var(--text); }
   .beheer-tab.active { color: var(--accent); border-bottom-color: var(--accent); }
-  .beheer-content { padding: 20px; }
-
-  /* Initiatieven lijst in beheer */
-  .beheer-list { display: flex; flex-direction: column; gap: 8px; margin-top: 16px; }
-  .beheer-item {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 12px 16px;
-    background: var(--surface2);
-    border: 1px solid var(--border);
-    border-radius: var(--radius-sm);
-  }
-  .beheer-item-info { display: flex; align-items: center; gap: 10px; }
-  .beheer-item-name { font-size: 14px; font-weight: 500; }
-  .beheer-item-actions { display: flex; gap: 6px; }
 
   /* ─── FORMULIER ─── */
-  .form-panel {
-    background: var(--surface2);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    padding: 24px;
-    margin-top: 16px;
-  }
-  .form-panel h3 { font-size: 15px; font-weight: 600; margin-bottom: 20px; }
-  .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
-  .form-grid.full { grid-template-columns: 1fr; }
+  .form-section-title { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.6px; color: var(--text-dim); margin: 22px 0 10px; }
+  .form-section-title:first-child { margin-top: 0; }
+  .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
   .form-group { display: flex; flex-direction: column; gap: 6px; }
   .form-group.span2 { grid-column: span 2; }
   label { font-size: 12px; font-weight: 500; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; }
-  input[type="text"], input[type="date"], textarea, select {
+  input[type="text"], input[type="date"], input[type="password"], textarea, select {
     background: var(--surface);
     border: 1px solid var(--border);
     border-radius: var(--radius-sm);
@@ -358,180 +410,123 @@
     padding: 8px 12px;
     font-size: 14px;
     font-family: 'Inter', sans-serif;
-    transition: border-color 0.15s;
+    transition: border-color 0.15s, box-shadow 0.15s;
     width: 100%;
     -webkit-appearance: auto;
   }
-  input[type="text"]:focus, input[type="date"]:focus, textarea:focus, select:focus {
+  input[type="text"]:focus, input[type="date"]:focus, input[type="password"]:focus, textarea:focus, select:focus {
     outline: none;
     border-color: var(--accent);
+    box-shadow: 0 0 0 3px rgba(37,99,235,0.12);
   }
-  textarea { resize: vertical; min-height: 80px; }
-  select option { background: var(--surface2); }
+  textarea { resize: vertical; min-height: 76px; }
 
-  /* WSJF fibonacci inputs */
-  .wsjf-form { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
-  .wsjf-fib-group { display: flex; flex-direction: column; gap: 8px; }
-  .wsjf-fib-group > label { font-size: 11px; }
-  .wsjf-fib-val { font-family: 'DM Mono', monospace; font-size: 22px; color: var(--accent); font-weight: 500; text-align: center; margin-bottom: 2px; }
-  .fib-buttons { display: flex; flex-wrap: wrap; gap: 4px; justify-content: center; }
+  .wsjf-form { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
+  .wsjf-fib-group { display: flex; flex-direction: column; gap: 6px; background: var(--surface2); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 10px 8px; }
+  .wsjf-fib-group > label { font-size: 10px; text-align: center; }
+  .wsjf-fib-val { font-family: 'DM Mono', monospace; font-size: 22px; color: var(--accent); font-weight: 500; text-align: center; }
+  .fib-buttons { display: flex; flex-wrap: wrap; gap: 3px; justify-content: center; }
   .fib-btn {
     font-family: 'DM Mono', monospace;
-    font-size: 12px;
-    padding: 4px 7px;
+    font-size: 11px;
+    padding: 3px 0;
     border-radius: 4px;
     border: 1px solid var(--border);
-    background: var(--surface2);
+    background: var(--surface);
     color: var(--text-muted);
     cursor: pointer;
     transition: all 0.12s;
-    min-width: 30px;
+    min-width: 27px;
     text-align: center;
   }
-  .fib-btn:hover { border-color: var(--accent); color: var(--accent); background: #eff6ff; }
+  .fib-btn:hover { border-color: var(--accent); color: var(--accent); background: var(--accent-soft); }
   .fib-btn.selected { background: var(--accent); border-color: var(--accent); color: white; }
-  .wsjf-result {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: var(--radius-sm);
-    padding: 12px 16px;
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    margin-top: 4px;
-  }
-  .wsjf-result-score { font-family: 'DM Mono', monospace; font-size: 28px; color: var(--accent); font-weight: 500; }
-  .wsjf-result-label { font-size: 12px; color: var(--text-muted); }
+  .wsjf-result { background: var(--accent-soft); border: 1px solid #bfdbfe; border-radius: var(--radius-sm); padding: 12px 16px; display: flex; align-items: center; gap: 16px; margin-top: 10px; }
+  .wsjf-result-score { font-family: 'DM Mono', monospace; font-size: 28px; color: var(--accent); font-weight: 500; line-height: 1; }
+  .wsjf-result-label { font-size: 11px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; }
 
-  .form-actions { display: flex; gap: 10px; margin-top: 20px; padding-top: 20px; border-top: 1px solid var(--border); }
-
-  /* ─── THEMA / AANDACHTSGEBIED BEHEER ─── */
-  .thema-list { display: flex; flex-direction: column; gap: 8px; margin-bottom: 16px; }
-  .thema-item {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 10px 14px;
-    background: var(--surface2);
-    border: 1px solid var(--border);
-    border-radius: var(--radius-sm);
-  }
+  /* ─── LIJSTBEHEER ─── */
+  .thema-list { display: flex; flex-direction: column; gap: 6px; margin-bottom: 16px; }
+  .thema-item { display: flex; align-items: center; justify-content: space-between; padding: 9px 12px; background: var(--surface2); border: 1px solid var(--border); border-radius: var(--radius-sm); }
   .thema-add { display: flex; gap: 10px; }
   .thema-add input { flex: 1; }
+  .in-use { font-size: 11px; color: var(--text-muted); font-family: 'DM Mono', monospace; }
 
-  /* ─── OPSLAAN ─── */
-  .save-bar {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    padding: 12px 20px;
-    background: var(--surface2);
-    border-top: 1px solid var(--border);
-  }
-  .save-confirm {
+  /* ─── TOAST ─── */
+  .toast {
+    position: fixed; left: 50%; bottom: 24px;
+    transform: translate(-50%, 16px);
+    background: #1e293b; color: #f1f5f9;
+    padding: 10px 10px 10px 16px;
+    border-radius: 10px;
+    display: flex; align-items: center; gap: 12px;
     font-size: 13px;
-    color: var(--green);
-    font-weight: 500;
-    opacity: 0;
-    transition: opacity 0.3s;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.22);
+    opacity: 0; pointer-events: none;
+    transition: opacity 0.2s, transform 0.2s;
+    z-index: 300;
+    max-width: calc(100vw - 32px);
   }
-  .save-confirm.visible { opacity: 1; }
+  .toast.visible { opacity: 1; transform: translate(-50%, 0); pointer-events: auto; }
+  .toast.error { background: #991b1b; }
+  .toast button { background: none; border: none; color: #93c5fd; font-family: 'Inter', sans-serif; font-size: 13px; font-weight: 600; cursor: pointer; padding: 4px 8px; border-radius: 5px; }
+  .toast button:hover { background: rgba(255,255,255,0.1); }
+  .toast-progress { position: absolute; left: 0; bottom: 0; height: 2px; background: #93c5fd; border-radius: 0 0 10px 10px; }
 
-  /* ─── MODAL ─── */
+  /* ─── MODAL (PIN) ─── */
   .modal-overlay {
     position: fixed; inset: 0;
     background: rgba(15,17,30,0.45);
     backdrop-filter: blur(3px);
     z-index: 200;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    opacity: 0;
-    pointer-events: none;
+    display: flex; align-items: center; justify-content: center;
+    opacity: 0; pointer-events: none;
     transition: opacity 0.2s;
   }
   .modal-overlay.visible { opacity: 1; pointer-events: auto; }
-  .modal {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    padding: 24px;
-    width: 100%;
-    max-width: 480px;
-    box-shadow: var(--shadow);
-  }
+  .modal { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 24px; width: 100%; max-width: 480px; box-shadow: var(--shadow); }
   .modal h3 { font-size: 16px; font-weight: 600; margin-bottom: 12px; }
   .modal p { font-size: 14px; color: var(--text-muted); margin-bottom: 20px; line-height: 1.6; }
   .modal-actions { display: flex; gap: 10px; justify-content: flex-end; }
-
-  /* ─── PIN MODAL ─── */
   .pin-dots { display: flex; gap: 12px; justify-content: center; margin: 20px 0; }
-  .pin-dot {
-    width: 14px; height: 14px;
-    border-radius: 50%;
-    border: 2px solid var(--border);
-    background: transparent;
-    transition: background 0.15s, border-color 0.15s;
-  }
+  .pin-dot { width: 14px; height: 14px; border-radius: 50%; border: 2px solid var(--border); background: transparent; transition: background 0.15s, border-color 0.15s; }
   .pin-dot.filled { background: var(--accent); border-color: var(--accent); }
   .pin-dot.error { background: var(--red); border-color: var(--red); }
-  .pin-pad {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 8px;
-    margin-bottom: 12px;
-  }
-  .pin-key {
-    background: var(--surface2);
-    border: 1px solid var(--border);
-    border-radius: var(--radius-sm);
-    color: var(--text);
-    font-family: 'DM Mono', monospace;
-    font-size: 18px;
-    padding: 14px;
-    cursor: pointer;
-    transition: all 0.12s;
-    text-align: center;
-  }
+  .pin-pad { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: 12px; }
+  .pin-key { background: var(--surface2); border: 1px solid var(--border); border-radius: var(--radius-sm); color: var(--text); font-family: 'DM Mono', monospace; font-size: 18px; padding: 14px; cursor: pointer; transition: all 0.12s; }
   .pin-key:hover { background: var(--surface3); border-color: var(--accent); }
   .pin-key:active { transform: scale(0.95); }
   .pin-key.wide { grid-column: span 2; font-size: 13px; font-family: 'Inter', sans-serif; }
   .pin-error-msg { font-size: 12px; color: var(--red); text-align: center; min-height: 18px; margin-bottom: 4px; }
   .pin-subtitle { font-size: 12px; color: var(--text-dim); text-align: center; margin-top: 8px; }
 
-  /* Wachtwoord instelling in beheer */
-  .pw-change-form { display: flex; flex-direction: column; gap: 10px; margin-top: 16px; padding: 16px; background: var(--surface2); border: 1px solid var(--border); border-radius: var(--radius-sm); }
-  .pw-change-form label { font-size: 11px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-muted); }
+  .pw-change-form { display: flex; flex-direction: column; gap: 10px; padding: 16px; background: var(--surface2); border: 1px solid var(--border); border-radius: var(--radius-sm); }
   .pw-input-row { display: flex; gap: 8px; }
   .pw-input-row input { flex: 1; }
 
   /* ─── EMPTY STATE ─── */
-  .empty-state {
-    text-align: center;
-    padding: 60px 20px;
-    color: var(--text-muted);
-  }
-  .empty-state .icon { font-size: 48px; margin-bottom: 16px; opacity: 0.4; }
-  .empty-state h3 { font-size: 16px; font-weight: 600; margin-bottom: 8px; color: var(--text); }
+  .empty-state { text-align: center; padding: 60px 20px; color: var(--text-muted); }
+  .empty-state .icon { font-size: 44px; margin-bottom: 14px; opacity: 0.45; }
+  .empty-state h3 { font-size: 16px; font-weight: 600; margin-bottom: 6px; color: var(--text); }
   .empty-state p { font-size: 14px; }
 
-  /* ─── HIDDEN ─── */
   .hidden { display: none !important; }
 
-  /* ─── SCROLLBAR ─── */
   ::-webkit-scrollbar { width: 6px; height: 6px; }
-  ::-webkit-scrollbar-track { background: var(--bg); }
+  ::-webkit-scrollbar-track { background: transparent; }
   ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
-  ::-webkit-scrollbar-thumb:hover { background: var(--accent); }
+  ::-webkit-scrollbar-thumb:hover { background: var(--text-dim); }
 
   @media (max-width: 768px) {
-    .stats-bar { grid-template-columns: repeat(2, 1fr); }
+    .stats-bar { grid-template-columns: 1fr 1fr; }
     .cards-grid { grid-template-columns: 1fr; }
     .form-grid { grid-template-columns: 1fr; }
     .form-group.span2 { grid-column: span 1; }
     .wsjf-form { grid-template-columns: repeat(2, 1fr); }
     .header { padding: 0 16px; }
     .main { padding: 16px; }
+    .search-box, .search-box input { width: 100%; }
+    .hide-mobile { display: none; }
   }
 </style>
 </head>
@@ -547,7 +542,9 @@
     </div>
   </div>
   <div class="header-right">
-    <button class="btn btn-secondary" id="btn-beheer" onclick="toggleBeheer()">⚙ Beheer</button>
+    <button class="btn btn-lock" id="btn-lock" onclick="toggleLock()"></button>
+    <button class="btn btn-secondary" onclick="openBeheer()">⚙ Beheer</button>
+    <button class="btn btn-primary" onclick="openEdit(null)">+ Nieuw initiatief <span class="kbd hide-mobile">N</span></button>
   </div>
 </header>
 
@@ -555,9 +552,9 @@
 <div class="main">
 
   <!-- STATS BAR -->
-  <div class="stats-bar" style="grid-template-columns: repeat(3, 1fr);">
+  <div class="stats-bar">
     <div class="stat-card">
-      <div class="stat-label">Totaal initiatieven</div>
+      <div class="stat-label" id="stat-totaal-label">Initiatieven</div>
       <div class="stat-value" id="stat-totaal">0</div>
     </div>
     <div class="stat-card">
@@ -570,36 +567,43 @@
     </div>
   </div>
 
+  <!-- TOOLBAR -->
+  <div class="toolbar">
+    <div class="scope-tabs" id="scope-tabs"></div>
+    <div class="search-box">
+      <span class="s-icon">⌕</span>
+      <input type="search" id="search" placeholder="Zoek op naam, eigenaar, notitie…" oninput="setSearch(this.value)" autocomplete="off">
+      <span class="kbd hide-mobile">/</span>
+    </div>
+  </div>
+
   <!-- FILTERS -->
   <div class="filters-section">
-    <div class="filter-group">
+    <div class="filter-group" id="filter-status-row">
       <span class="filter-label">Status</span>
-      <div id="filter-status"></div>
+      <div class="chips" id="filter-status"></div>
     </div>
     <div class="filter-group">
       <span class="filter-label">Aandachtsgebied</span>
-      <div id="filter-aandachtsgebied"></div>
+      <div class="chips" id="filter-aandachtsgebied"></div>
     </div>
     <div class="filter-group">
       <span class="filter-label">Thema</span>
       <select class="filter-select" id="filter-thema" onchange="setFilterSelect(this,'thema')"></select>
       <span class="filter-label" style="min-width:auto;margin-left:16px">BU</span>
       <select class="filter-select" id="filter-bu" onchange="setFilterSelect(this,'bu')"></select>
+      <button class="clear-filters hidden" id="btn-clear-filters" onclick="clearAllFilters()">✕ Filters wissen</button>
     </div>
   </div>
 
   <!-- VIEWER -->
   <div id="view-kaart" class="hidden">
     <div class="cards-grid" id="cards-grid"></div>
-    <div class="empty-state hidden" id="empty-kaart">
-      <div class="icon">📋</div>
-      <h3>Geen initiatieven gevonden</h3>
-      <p>Pas de filters aan of voeg een nieuw initiatief toe via Beheer.</p>
-    </div>
+    <div class="empty-state hidden" id="empty-kaart"></div>
   </div>
 
   <div id="view-tabel">
-    <div class="table-wrap">
+    <div class="table-wrap" id="table-wrap">
       <table id="initiatieven-table">
         <thead>
           <tr>
@@ -609,155 +613,159 @@
             <th onclick="sortTable('business_unit')" id="th-business_unit">Business Unit <span class="sort-icon" id="si-business_unit">↕</span></th>
             <th onclick="sortTable('aandachtsgebied')" id="th-aandachtsgebied">Aandachtsgebied <span class="sort-icon" id="si-aandachtsgebied">↕</span></th>
             <th onclick="sortTable('eigenaar')" id="th-eigenaar">Eigenaar <span class="sort-icon" id="si-eigenaar">↕</span></th>
-            <th onclick="sortTable('wsjf')" id="th-wsjf" class="sorted" title="Weighted Shortest Job First — prioriteringsscore op basis van Business Value, Time Criticality, Risk Reduction en Job Size">WSJF <span style="font-size:10px;opacity:0.6" data-note="Weighted Shortest Job First&#10;Score = (BV + TC + RR) / JS&#10;Hoe hoger de score, hoe eerder het initiatief opgepakt moet worden.">ⓘ</span> <span class="sort-icon active" id="si-wsjf">↓</span></th>
+            <th onclick="sortTable('afgerond_op')" id="th-afgerond_op" class="col-afgerond">Afgerond <span class="sort-icon" id="si-afgerond_op">↕</span></th>
+            <th onclick="sortTable('wsjf')" id="th-wsjf" class="sorted">WSJF <span style="font-size:10px;opacity:0.6" data-note="Weighted Shortest Job First&#10;Score = (BV + TC + RR) / JS&#10;Hoe hoger de score, hoe eerder het initiatief opgepakt moet worden.">ⓘ</span> <span class="sort-icon active" id="si-wsjf">↓</span></th>
+            <th class="col-actions"></th>
           </tr>
         </thead>
         <tbody id="table-body"></tbody>
       </table>
     </div>
-    <div class="empty-state hidden" id="empty-tabel">
-      <div class="icon">📋</div>
-      <h3>Geen initiatieven gevonden</h3>
-      <p>Pas de filters aan of voeg een nieuw initiatief toe via Beheer.</p>
-    </div>
+    <div class="empty-state hidden" id="empty-tabel"></div>
   </div>
+</div>
 
-  <!-- BEHEER PANEL -->
-  <div class="beheer-panel hidden" id="beheer-panel">
-    <div class="beheer-header">
-      <h2>⚙ Beheer</h2>
-      <button class="btn btn-ghost btn-sm" onclick="toggleBeheer()">✕ Sluiten</button>
+<!-- DRAWER BACKDROP -->
+<div class="drawer-backdrop" id="drawer-backdrop" onclick="closeDrawers()"></div>
+
+<!-- DRAWER: Initiatief bewerken -->
+<aside class="drawer" id="edit-drawer" aria-label="Initiatief bewerken">
+  <div class="drawer-header">
+    <div>
+      <div class="drawer-eyebrow" id="form-eyebrow"></div>
+      <h3 id="form-title">Nieuw initiatief</h3>
     </div>
-    <div class="beheer-tabs">
-      <button class="beheer-tab active" onclick="setBeheerTab('initiatieven')">Initiatieven</button>
-      <button class="beheer-tab" onclick="setBeheerTab('themas')">Strategische Thema's</button>
-      <button class="beheer-tab" onclick="setBeheerTab('aandachtsgebieden')">Aandachtsgebieden</button>
-      <button class="beheer-tab" onclick="setBeheerTab('beveiliging')">Beveiliging</button>
-    </div>
-
-    <!-- Tab: Initiatieven -->
-    <div class="beheer-content" id="tab-initiatieven">
-      <button class="btn btn-primary" onclick="openForm(null)">+ Nieuw initiatief toevoegen</button>
-      <div class="beheer-list" id="beheer-initiatieven-list"></div>
-
-      <!-- Formulier -->
-      <div class="form-panel hidden" id="initiatief-form">
-        <h3 id="form-title">Nieuw initiatief</h3>
-        <div class="form-grid">
-          <div class="form-group">
-            <label for="f-naam">Naam *</label>
-            <input type="text" id="f-naam" placeholder="Naam van het initiatief">
-          </div>
-          <div class="form-group">
-            <label for="f-eigenaar">Eigenaar</label>
-            <input type="text" id="f-eigenaar" placeholder="Naam eigenaar">
-          </div>
-          <div class="form-group span2">
-            <label for="f-omschrijving">Omschrijving</label>
-            <textarea id="f-omschrijving" placeholder="Korte omschrijving..."></textarea>
-          </div>
-          <div class="form-group">
-            <label for="f-status">Status</label>
-            <select id="f-status">
-              <option>Idee</option>
-              <option>Beoordeling</option>
-              <option>Analyse</option>
-              <option>Goedgekeurd</option>
-              <option>Uitvoering</option>
-              <option>Klaar</option>
-            </select>
-          </div>
-          <div class="form-group">
-            <label for="f-thema">Strategisch thema</label>
-            <select id="f-thema"></select>
-          </div>
-          <div class="form-group">
-            <label for="f-bu">Business Unit</label>
-            <select id="f-bu">
-              <option value="">— Geen —</option>
-              <option>Energie uit Afval</option>
-              <option>GGC</option>
-              <option>Digitalisering</option>
-            </select>
-          </div>
-          <div class="form-group">
-            <label for="f-aandachtsgebied">Aandachtsgebied</label>
-            <select id="f-aandachtsgebied">
-              <option value="">— Geen —</option>
-            </select>
-          </div>
-          <div class="form-group">
-            <label for="f-startdatum">Startdatum</label>
-            <input type="date" id="f-startdatum">
-          </div>
-          <div class="form-group span2">
-            <label>WSJF Scores (Fibonacci)</label>
-            <div class="wsjf-form">
-              <div class="wsjf-fib-group">
-                <label>Business Value</label>
-                <div class="wsjf-fib-val" id="val-bv">5</div>
-                <div class="fib-buttons" id="fib-bv"></div>
-              </div>
-              <div class="wsjf-fib-group">
-                <label>Time Criticality</label>
-                <div class="wsjf-fib-val" id="val-tc">5</div>
-                <div class="fib-buttons" id="fib-tc"></div>
-              </div>
-              <div class="wsjf-fib-group">
-                <label>Risk Reduction</label>
-                <div class="wsjf-fib-val" id="val-rr">5</div>
-                <div class="fib-buttons" id="fib-rr"></div>
-              </div>
-              <div class="wsjf-fib-group">
-                <label>Job Size</label>
-                <div class="wsjf-fib-val" id="val-js">5</div>
-                <div class="fib-buttons" id="fib-js"></div>
-              </div>
-            </div>
-            <div class="wsjf-result">
-              <div>
-                <div class="wsjf-result-score" id="form-wsjf-score">3.0</div>
-                <div class="wsjf-result-label">WSJF Score</div>
-              </div>
-              <div style="font-size:12px;color:var(--text-muted);line-height:1.6;">
-                Formule: (BV + TC + RR) / JS<br>
-                = (<span id="calc-bv">5</span> + <span id="calc-tc">5</span> + <span id="calc-rr">5</span>) / <span id="calc-js">5</span>
-              </div>
-            </div>
-          </div>
-          <div class="form-group span2">
-            <label for="f-notitie">Notitie</label>
-            <textarea id="f-notitie" placeholder="Optionele toelichting..."></textarea>
-          </div>
-        </div>
-        <div class="form-actions">
-          <button class="btn btn-primary" onclick="saveInitiatief()">💾 Opslaan</button>
-          <button class="btn btn-secondary" onclick="closeForm()">Annuleren</button>
-        </div>
+    <button class="icon-btn" onclick="closeDrawers()" title="Sluiten (Esc)">✕</button>
+  </div>
+  <div class="drawer-body">
+    <div class="form-section-title">Algemeen</div>
+    <div class="form-grid">
+      <div class="form-group span2">
+        <label for="f-naam">Naam *</label>
+        <input type="text" id="f-naam" placeholder="Naam van het initiatief">
+      </div>
+      <div class="form-group span2">
+        <label for="f-omschrijving">Omschrijving</label>
+        <textarea id="f-omschrijving" placeholder="Korte omschrijving..."></textarea>
+      </div>
+      <div class="form-group">
+        <label for="f-status">Status</label>
+        <select id="f-status">
+          <option>Idee</option>
+          <option>Beoordeling</option>
+          <option>Analyse</option>
+          <option>Goedgekeurd</option>
+          <option>Uitvoering</option>
+          <option>Klaar</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="f-eigenaar">Eigenaar</label>
+        <input type="text" id="f-eigenaar" placeholder="Naam eigenaar">
       </div>
     </div>
 
-    <!-- Tab: Thema's -->
-    <div class="beheer-content hidden" id="tab-themas">
+    <div class="form-section-title">Indeling</div>
+    <div class="form-grid">
+      <div class="form-group">
+        <label for="f-thema">Strategisch thema</label>
+        <select id="f-thema"></select>
+      </div>
+      <div class="form-group">
+        <label for="f-aandachtsgebied">Aandachtsgebied</label>
+        <select id="f-aandachtsgebied"></select>
+      </div>
+      <div class="form-group">
+        <label for="f-bu">Business Unit</label>
+        <select id="f-bu">
+          <option value="">— Geen —</option>
+          <option>Energie uit Afval</option>
+          <option>GGC</option>
+          <option>Digitalisering</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="f-startdatum">Startdatum</label>
+        <input type="date" id="f-startdatum">
+      </div>
+    </div>
+
+    <div class="form-section-title">WSJF-scores (Fibonacci)</div>
+    <div class="wsjf-form">
+      <div class="wsjf-fib-group">
+        <label>Business Value</label>
+        <div class="wsjf-fib-val" id="val-bv">5</div>
+        <div class="fib-buttons" id="fib-bv"></div>
+      </div>
+      <div class="wsjf-fib-group">
+        <label>Time Criticality</label>
+        <div class="wsjf-fib-val" id="val-tc">5</div>
+        <div class="fib-buttons" id="fib-tc"></div>
+      </div>
+      <div class="wsjf-fib-group">
+        <label>Risk Reduction</label>
+        <div class="wsjf-fib-val" id="val-rr">5</div>
+        <div class="fib-buttons" id="fib-rr"></div>
+      </div>
+      <div class="wsjf-fib-group">
+        <label>Job Size</label>
+        <div class="wsjf-fib-val" id="val-js">5</div>
+        <div class="fib-buttons" id="fib-js"></div>
+      </div>
+    </div>
+    <div class="wsjf-result">
+      <div>
+        <div class="wsjf-result-score" id="form-wsjf-score">3.0</div>
+        <div class="wsjf-result-label">WSJF-score</div>
+      </div>
+      <div style="font-size:12px;color:var(--text-muted);line-height:1.6;">
+        Formule: (BV + TC + RR) / JS<br>
+        = (<span id="calc-bv">5</span> + <span id="calc-tc">5</span> + <span id="calc-rr">5</span>) / <span id="calc-js">5</span>
+      </div>
+    </div>
+
+    <div class="form-section-title">Notitie</div>
+    <textarea id="f-notitie" placeholder="Optionele toelichting..."></textarea>
+  </div>
+  <div class="drawer-footer">
+    <button class="btn btn-danger" id="drawer-delete" onclick="deleteInitiatief(editingId)">🗑 Verwijderen</button>
+    <span class="spacer"></span>
+    <button class="btn btn-ghost" onclick="closeDrawers()">Annuleren</button>
+    <button class="btn btn-primary" onclick="saveInitiatief()">Opslaan <span class="kbd hide-mobile">⌘S</span></button>
+  </div>
+</aside>
+
+<!-- DRAWER: Beheer -->
+<aside class="drawer" id="beheer-drawer" aria-label="Beheer" style="width:min(520px,100vw)">
+  <div class="drawer-header">
+    <div>
+      <div class="drawer-eyebrow">Instellingen</div>
+      <h3>Beheer</h3>
+    </div>
+    <button class="icon-btn" onclick="closeDrawers()" title="Sluiten (Esc)">✕</button>
+  </div>
+  <div class="drawer-tabs">
+    <button class="beheer-tab active" data-tab="themas" onclick="setBeheerTab('themas')">Strategische thema's</button>
+    <button class="beheer-tab" data-tab="aandachtsgebieden" onclick="setBeheerTab('aandachtsgebieden')">Aandachtsgebieden</button>
+    <button class="beheer-tab" data-tab="beveiliging" onclick="setBeheerTab('beveiliging')">Beveiliging</button>
+  </div>
+  <div class="drawer-body">
+    <div id="tab-themas">
       <div class="thema-list" id="thema-list"></div>
       <div class="thema-add">
-        <input type="text" id="nieuw-thema" placeholder="Nieuw strategisch thema...">
+        <input type="text" id="nieuw-thema" placeholder="Nieuw strategisch thema..." onkeydown="if(event.key==='Enter')addThema()">
         <button class="btn btn-primary" onclick="addThema()">+ Toevoegen</button>
       </div>
     </div>
-
-    <!-- Tab: Aandachtsgebieden -->
-    <div class="beheer-content hidden" id="tab-aandachtsgebieden">
+    <div id="tab-aandachtsgebieden" class="hidden">
       <div class="thema-list" id="aandachtsgebied-list"></div>
       <div class="thema-add">
-        <input type="text" id="nieuw-aandachtsgebied" placeholder="Nieuw aandachtsgebied...">
+        <input type="text" id="nieuw-aandachtsgebied" placeholder="Nieuw aandachtsgebied..." onkeydown="if(event.key==='Enter')addAandachtsgebied()">
         <button class="btn btn-primary" onclick="addAandachtsgebied()">+ Toevoegen</button>
       </div>
     </div>
-
-    <!-- Tab: Beveiliging -->
-    <div class="beheer-content hidden" id="tab-beveiliging">
-      <p style="font-size:14px;color:var(--text-muted);margin-bottom:16px;">Stel een 4-cijferige pincode in voor toegang tot Beheer.</p>
+    <div id="tab-beveiliging" class="hidden">
+      <p style="font-size:14px;color:var(--text-muted);margin-bottom:16px;">Stel een 4-cijferige pincode in voor het bewerken van het portfolio.</p>
       <div class="pw-change-form">
         <label>Nieuwe pincode (4 cijfers)</label>
         <div class="pw-input-row">
@@ -766,26 +774,26 @@
         </div>
         <div id="pin-save-msg" style="font-size:12px;min-height:16px;"></div>
       </div>
-      <div style="margin-top:16px;padding:12px 16px;background:var(--surface2);border:1px solid var(--border);border-radius:var(--radius-sm);">
-        <div style="font-size:12px;color:var(--text-muted);">Huidige pincode is opgeslagen in de lokale opslag van je browser. De standaard pincode is <span style="font-family:'DM Mono',monospace;color:var(--text);">1234</span>.</div>
-      </div>
-    </div>
-
-    <!-- Save bar -->
-    <div class="save-bar">
-      <span class="save-confirm" id="save-confirm"></span>
+      <p style="margin-top:14px;font-size:12px;color:var(--text-muted);">De pincode wordt in de lokale opslag van je browser bewaard. Standaard: <span style="font-family:'DM Mono',monospace;color:var(--text);">1234</span>.</p>
     </div>
   </div>
-</div>
+</aside>
 
 <div id="global-tooltip"></div>
 
-<!-- MODAL: PIN / Wachtwoord -->
+<!-- TOAST -->
+<div class="toast" id="toast">
+  <span id="toast-msg"></span>
+  <button id="toast-action" class="hidden"></button>
+  <div class="toast-progress" id="toast-progress"></div>
+</div>
+
+<!-- MODAL: PIN -->
 <div class="modal-overlay" id="pin-modal">
   <div class="modal" style="max-width:320px;text-align:center;">
-    <h3>🔒 Beheer</h3>
+    <h3>🔒 Bewerken ontgrendelen</h3>
     <p style="margin-bottom:4px;">Voer de pincode in om door te gaan.</p>
-    <div class="pin-dots" id="pin-dots">
+    <div class="pin-dots">
       <div class="pin-dot" id="pd0"></div>
       <div class="pin-dot" id="pd1"></div>
       <div class="pin-dot" id="pd2"></div>
@@ -808,19 +816,7 @@
     <div class="modal-actions" style="justify-content:center;">
       <button class="btn btn-ghost btn-sm" onclick="closePinModal()">Annuleren</button>
     </div>
-    <div class="pin-subtitle">Standaard pincode: <span style="font-family:'DM Mono',monospace;">1234</span></div>
-  </div>
-</div>
-
-<!-- MODAL: Bevestiging verwijderen -->
-<div class="modal-overlay" id="confirm-modal">
-  <div class="modal">
-    <h3>Initiatief verwijderen</h3>
-    <p id="confirm-text">Weet je zeker dat je dit initiatief wilt verwijderen? Deze actie kan niet ongedaan worden gemaakt.</p>
-    <div class="modal-actions">
-      <button class="btn btn-secondary" onclick="closeModal()">Annuleren</button>
-      <button class="btn btn-danger" id="confirm-btn" onclick="executeDelete()">Verwijderen</button>
-    </div>
+    <div class="pin-subtitle">Je blijft ontgrendeld tot je het tabblad sluit.</div>
   </div>
 </div>
 
@@ -834,115 +830,86 @@ let portfolio = {
 
 const FIBONACCI = [1, 2, 3, 5, 8, 13, 21];
 const DEFAULT_PIN = "1234";
-let pinBuffer = "";
-let pinUnlocked = false;
 const BUSINESS_UNITS = ["Energie uit Afval", "GGC", "Digitalisering"];
+const STATUS_OPEN = ["Idee", "Beoordeling", "Analyse", "Goedgekeurd", "Uitvoering"];
+const STATUS_ALL = [...STATUS_OPEN, "Klaar"];
+
+// Veilige opslag: valt terug op geheugen als de browser storage blokkeert
+function safeStore(kind) {
+  const mem = {};
+  try { const s = window[kind]; s.getItem("x"); return s; }
+  catch (e) { return { getItem: k => mem[k] ?? null, setItem: (k, v) => { mem[k] = String(v); }, removeItem: k => { delete mem[k]; } }; }
+}
+const local = safeStore("localStorage");
+const session = safeStore("sessionStorage");
+
+let pinBuffer = "";
+let pinCallback = null;
+let pinUnlocked = session.getItem("lpm_unlocked") === "1";
 let wsjfState = { bv: 5, tc: 5, rr: 5, js: 5 };
 
-// Filters: status en aandachtsgebied zijn arrays (leeg = alle tonen)
+let scope = "actief";            // actief | afgerond | alles
+let search = "";
 let filters = { status: [], aandachtsgebied: [], thema: "Alle", bu: "Alle" };
 let sortCol = "wsjf";
 let sortDir = "desc";
 let currentView = "tabel";
-let beheerOpen = false;
-let activeBeheerTab = "initiatieven";
 let editingId = null;
-let deleteId = null;
+let formDirty = false;
+let flashId = null;
 
-// ─── WSJF ────────────────────────────────────────────────────────────
+// ─── HELPERS ─────────────────────────────────────────────────────────
+function escHtml(s) {
+  return String(s ?? "").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
+}
+function today() { return new Date().toISOString().slice(0, 10); }
+function fmtDate(d) {
+  if (!d) return "—";
+  const dt = new Date(d + "T00:00:00");
+  return isNaN(dt) ? d : dt.toLocaleDateString("nl-NL", { day: "numeric", month: "short", year: "numeric" });
+}
+function isTyping() {
+  const el = document.activeElement;
+  return el && (["INPUT", "TEXTAREA", "SELECT"].includes(el.tagName) || el.isContentEditable);
+}
 function calcWsjf(w) {
   return Math.round(((w.business_value + w.time_criticality + w.risk_reduction) / w.job_size) * 10) / 10;
 }
-
 function wsjfTooltipText(w) {
-  const score = calcWsjf(w);
-  return `WSJF: ${score.toFixed(1)}\n(BV + TC + RR) / JS\n= (${w.business_value} + ${w.time_criticality} + ${w.risk_reduction}) / ${w.job_size}`;
+  return `WSJF ${calcWsjf(w).toFixed(1)}\n` +
+    `Business Value ${w.business_value} · Time Criticality ${w.time_criticality} · Risk Reduction ${w.risk_reduction}\n` +
+    `÷ Job Size ${w.job_size}\n` +
+    `= (${w.business_value} + ${w.time_criticality} + ${w.risk_reduction}) / ${w.job_size}`;
 }
+function statusClass(s) { return "badge-status-" + String(s).replace(/\s+/g, '').toLowerCase(); }
 
-// ─── RENDER FILTERS ──────────────────────────────────────────────────
-function renderFilters() {
-  // Status — multi-select chips
-  const statusOpts = ["Idee", "Beoordeling", "Analyse", "Goedgekeurd", "Uitvoering", "Klaar"];
-  const alleStatusActive = filters.status.length === 0;
-  document.getElementById("filter-status").innerHTML =
-    `<span class="filter-chip alle ${alleStatusActive ? 'active' : ''}" onclick="clearStatusFilter()">Alle</span>` +
-    statusOpts.map(s =>
-      `<span class="filter-chip ${filters.status.includes(s) ? 'active' : ''}" onclick="toggleStatusFilter('${s}')">${s}</span>`
-    ).join('');
-
-  // Aandachtsgebied — multi-select chips
-  const alleAGActive = filters.aandachtsgebied.length === 0;
-  document.getElementById("filter-aandachtsgebied").innerHTML =
-    `<span class="filter-chip alle ${alleAGActive ? 'active' : ''}" onclick="clearAandachtsgebiedFilter()">Alle</span>` +
-    portfolio.aandachtsgebieden.map(a =>
-      `<span class="filter-chip ${filters.aandachtsgebied.includes(a) ? 'active' : ''}" onclick="toggleAandachtsgebiedFilter('${escHtml(a)}')">${escHtml(a)}</span>`
-    ).join('');
-
-  // Thema — dropdown
-  const themaEl = document.getElementById("filter-thema");
-  const themas = ["Alle", ...portfolio.strategische_themas];
-  themaEl.innerHTML = themas.map(t => `<option value="${escHtml(t)}">${escHtml(t)}</option>`).join('');
-  themaEl.value = filters.thema;
-  themaEl.classList.toggle("active", filters.thema !== "Alle");
-
-  // BU — dropdown
-  const buEl = document.getElementById("filter-bu");
-  const bus = ["Alle", ...BUSINESS_UNITS];
-  buEl.innerHTML = bus.map(b => `<option value="${escHtml(b)}">${escHtml(b)}</option>`).join('');
-  buEl.value = filters.bu;
-  buEl.classList.toggle("active", filters.bu !== "Alle");
+// ─── FILTERING ───────────────────────────────────────────────────────
+function matchesSearch(i) {
+  if (!search) return true;
+  const q = search.toLowerCase();
+  return [i.naam, i.omschrijving, i.eigenaar, i.notitie, i.thema, i.aandachtsgebied, i.business_unit]
+    .some(v => (v || "").toLowerCase().includes(q));
 }
-
-function clearStatusFilter() {
-  filters.status = [];
-  renderFilters();
-  renderAll();
+function passesBaseFilters(i) {
+  if (filters.aandachtsgebied.length && !filters.aandachtsgebied.includes(i.aandachtsgebied || "")) return false;
+  if (filters.thema !== "Alle" && i.thema !== filters.thema) return false;
+  if (filters.bu !== "Alle" && (i.business_unit || "") !== filters.bu) return false;
+  return matchesSearch(i);
 }
-
-function toggleStatusFilter(s) {
-  const idx = filters.status.indexOf(s);
-  if (idx === -1) filters.status.push(s);
-  else filters.status.splice(idx, 1);
-  renderFilters();
-  renderAll();
+function inScope(i, s = scope) {
+  if (s === "actief") return i.status !== "Klaar";
+  if (s === "afgerond") return i.status === "Klaar";
+  return true;
 }
-
-function clearAandachtsgebiedFilter() {
-  filters.aandachtsgebied = [];
-  renderFilters();
-  renderAll();
-}
-
-function toggleAandachtsgebiedFilter(a) {
-  const idx = filters.aandachtsgebied.indexOf(a);
-  if (idx === -1) filters.aandachtsgebied.push(a);
-  else filters.aandachtsgebied.splice(idx, 1);
-  renderFilters();
-  renderAll();
-}
-
-function setFilterSelect(el, group) {
-  filters[group] = el.value;
-  el.classList.toggle("active", el.value !== "Alle");
-  renderAll();
-}
-
-// ─── FILTERED & SORTED DATA ──────────────────────────────────────────
 function getFiltered() {
-  return portfolio.initiatieven.filter(i => {
-    if (filters.status.length > 0 && !filters.status.includes(i.status)) return false;
-    if (filters.aandachtsgebied.length > 0 && !filters.aandachtsgebied.includes(i.aandachtsgebied || "")) return false;
-    if (filters.thema !== "Alle" && i.thema !== filters.thema) return false;
-    if (filters.bu !== "Alle" && (i.business_unit || "") !== filters.bu) return false;
-    return true;
-  });
+  return portfolio.initiatieven.filter(i =>
+    inScope(i) && passesBaseFilters(i) &&
+    (!filters.status.length || filters.status.includes(i.status)));
 }
-
 function getSorted(list) {
   return [...list].sort((a, b) => {
     let av, bv;
     if (sortCol === "wsjf") { av = calcWsjf(a.wsjf); bv = calcWsjf(b.wsjf); }
-    else if (sortCol === "naam") { av = a.naam.toLowerCase(); bv = b.naam.toLowerCase(); }
     else { av = (a[sortCol] || "").toLowerCase(); bv = (b[sortCol] || "").toLowerCase(); }
     if (av < bv) return sortDir === "asc" ? -1 : 1;
     if (av > bv) return sortDir === "asc" ? 1 : -1;
@@ -950,56 +917,140 @@ function getSorted(list) {
   });
 }
 
+// ─── SCOPE (Actief / Afgerond / Alles) ───────────────────────────────
+function renderScope() {
+  const base = portfolio.initiatieven.filter(passesBaseFilters);
+  const tabs = [
+    ["actief", "Actief"],
+    ["afgerond", "Afgerond"],
+    ["alles", "Alles"],
+  ];
+  document.getElementById("scope-tabs").innerHTML = tabs.map(([key, label]) => {
+    const n = base.filter(i => inScope(i, key)).length;
+    return `<button class="scope-tab ${scope === key ? 'active' : ''}" onclick="setScope('${key}')">${label}<span class="count">${n}</span></button>`;
+  }).join('');
+}
+function setScope(s) {
+  scope = s;
+  if (s === "afgerond") { sortCol = "afgerond_op"; sortDir = "desc"; }
+  else if (sortCol === "afgerond_op") { sortCol = "wsjf"; sortDir = "desc"; }
+  updateSortIcons();
+  renderAll();
+}
+
+// ─── FILTERS UI ──────────────────────────────────────────────────────
+function renderFilters() {
+  const statusOpts = scope === "actief" ? STATUS_OPEN : scope === "alles" ? STATUS_ALL : [];
+  filters.status = filters.status.filter(s => statusOpts.includes(s));
+  document.getElementById("filter-status-row").classList.toggle("hidden", !statusOpts.length);
+  document.getElementById("filter-status").innerHTML =
+    `<span class="filter-chip alle ${!filters.status.length ? 'active' : ''}" onclick="clearStatusFilter()">Alle</span>` +
+    statusOpts.map(s =>
+      `<span class="filter-chip ${filters.status.includes(s) ? 'active' : ''}" onclick="toggleStatusFilter('${s}')">${s}</span>`
+    ).join('');
+
+  document.getElementById("filter-aandachtsgebied").innerHTML =
+    `<span class="filter-chip alle ${!filters.aandachtsgebied.length ? 'active' : ''}" onclick="clearAandachtsgebiedFilter()">Alle</span>` +
+    portfolio.aandachtsgebieden.map((a, idx) =>
+      `<span class="filter-chip ${filters.aandachtsgebied.includes(a) ? 'active' : ''}" onclick="toggleAandachtsgebiedFilter(${idx})">${escHtml(a)}</span>`
+    ).join('');
+
+  const themaEl = document.getElementById("filter-thema");
+  themaEl.innerHTML = ["Alle", ...portfolio.strategische_themas].map(t => `<option value="${escHtml(t)}">${escHtml(t)}</option>`).join('');
+  themaEl.value = filters.thema;
+  themaEl.classList.toggle("active", filters.thema !== "Alle");
+
+  const buEl = document.getElementById("filter-bu");
+  buEl.innerHTML = ["Alle", ...BUSINESS_UNITS].map(b => `<option value="${escHtml(b)}">${escHtml(b)}</option>`).join('');
+  buEl.value = filters.bu;
+  buEl.classList.toggle("active", filters.bu !== "Alle");
+
+  const anyActive = filters.status.length || filters.aandachtsgebied.length ||
+    filters.thema !== "Alle" || filters.bu !== "Alle" || search;
+  document.getElementById("btn-clear-filters").classList.toggle("hidden", !anyActive);
+}
+function clearStatusFilter() { filters.status = []; renderAll(); }
+function toggleStatusFilter(s) {
+  const idx = filters.status.indexOf(s);
+  idx === -1 ? filters.status.push(s) : filters.status.splice(idx, 1);
+  renderAll();
+}
+function clearAandachtsgebiedFilter() { filters.aandachtsgebied = []; renderAll(); }
+function toggleAandachtsgebiedFilter(i) {
+  const a = portfolio.aandachtsgebieden[i];
+  const idx = filters.aandachtsgebied.indexOf(a);
+  idx === -1 ? filters.aandachtsgebied.push(a) : filters.aandachtsgebied.splice(idx, 1);
+  renderAll();
+}
+function setFilterSelect(el, group) { filters[group] = el.value; renderAll(); }
+function setSearch(v) { search = v.trim(); renderAll(); }
+function clearAllFilters() {
+  filters = { status: [], aandachtsgebied: [], thema: "Alle", bu: "Alle" };
+  search = "";
+  document.getElementById("search").value = "";
+  renderAll();
+}
+
 // ─── STATS ───────────────────────────────────────────────────────────
 function renderStats() {
   const filtered = getFiltered();
+  document.getElementById("stat-totaal-label").textContent =
+    scope === "afgerond" ? "Afgeronde initiatieven" : scope === "alles" ? "Alle initiatieven" : "Actieve initiatieven";
   document.getElementById("stat-totaal").textContent = filtered.length;
   document.getElementById("stat-actief").textContent = filtered.filter(i => i.status === "Uitvoering").length;
   const scores = filtered.map(i => calcWsjf(i.wsjf));
   document.getElementById("stat-wsjf").textContent = scores.length ? Math.max(...scores).toFixed(1) : "—";
 }
 
-// ─── STATUS BADGE CLASS ───────────────────────────────────────────────
-function statusClass(s) {
-  return "badge-status-" + s.replace(/\s+/g, '').toLowerCase();
+// ─── EMPTY STATE ─────────────────────────────────────────────────────
+function emptyHtml() {
+  if (search) return `<div class="icon">🔍</div><h3>Geen resultaten voor “${escHtml(search)}”</h3><p>Probeer een andere zoekterm of <a href="#" onclick="clearAllFilters();return false;">wis de filters</a>.</p>`;
+  if (scope === "afgerond") return `<div class="icon">🏁</div><h3>Nog niets afgerond</h3><p>Initiatieven met status “Klaar” verschijnen hier.</p>`;
+  return `<div class="icon">📋</div><h3>Geen initiatieven gevonden</h3><p>Pas de filters aan of voeg een nieuw initiatief toe.</p>`;
+}
+
+// ─── ROW / CARD ACTIONS ──────────────────────────────────────────────
+function actionButtons(i) {
+  const toggle = i.status === "Klaar"
+    ? `<button class="icon-btn success" data-note="Heropenen" onclick="reopen(${i.id})">↺</button>`
+    : `<button class="icon-btn success" data-note="Markeer als afgerond" onclick="markKlaar(${i.id})">✓</button>`;
+  return `<div class="row-actions" onclick="event.stopPropagation()">
+    <button class="icon-btn" data-note="Bewerken" onclick="openEdit(${i.id})">✎</button>
+    ${toggle}
+    <button class="icon-btn danger" data-note="Verwijderen" onclick="deleteInitiatief(${i.id})">🗑</button>
+  </div>`;
 }
 
 // ─── CARDS ───────────────────────────────────────────────────────────
 function renderCards() {
   const grid = document.getElementById("cards-grid");
   const empty = document.getElementById("empty-kaart");
-  const filtered = getSorted(getFiltered());
-
-  if (!filtered.length) {
-    grid.innerHTML = "";
-    empty.classList.remove("hidden");
-    return;
-  }
+  const list = getSorted(getFiltered());
+  if (!list.length) { grid.innerHTML = ""; empty.innerHTML = emptyHtml(); empty.classList.remove("hidden"); return; }
   empty.classList.add("hidden");
 
-  grid.innerHTML = filtered.map(i => {
+  grid.innerHTML = list.map(i => {
     const wsjf = calcWsjf(i.wsjf);
-    const wsjfNote = escHtml(wsjfTooltipText(i.wsjf));
-    const noteHtml = i.notitie
-      ? `<span class="note-icon" data-note="${escHtml(i.notitie)}">💬</span>`
-      : "";
+    const noteHtml = i.notitie ? `<span class="note-icon" data-note="${escHtml(i.notitie)}">💬</span>` : "";
+    const meta = [i.eigenaar ? escHtml(i.eigenaar) : "",
+      i.status === "Klaar" && i.afgerond_op ? "Afgerond " + fmtDate(i.afgerond_op) : (i.startdatum ? "Start " + fmtDate(i.startdatum) : "")]
+      .filter(Boolean).join(" · ");
+    const cls = [i.status === "Klaar" && scope !== "afgerond" ? "is-klaar" : "", i.id === flashId ? "flash" : ""].join(" ");
     return `
-    <div class="initiative-card">
+    <div class="initiative-card ${cls} ${scope === 'afgerond' ? 'scope-afgerond' : ''}" onclick="openEdit(${i.id})">
       <div class="card-accent-bar"></div>
       <div class="card-body">
-        <div class="card-header">
-          <div class="card-title">${escHtml(i.naam)} ${noteHtml}</div>
-        </div>
+        <div class="card-header"><div class="card-title">${escHtml(i.naam)} ${noteHtml}</div></div>
         <div class="card-desc">${escHtml(i.omschrijving || "")}</div>
         <div class="badges">
           <span class="badge ${statusClass(i.status)}">${escHtml(i.status)}</span>
-          <span class="badge badge-thema">${escHtml(i.thema || "")}</span>
+          ${i.thema ? `<span class="badge badge-thema">${escHtml(i.thema)}</span>` : ""}
           ${i.business_unit ? `<span class="badge badge-bu">${escHtml(i.business_unit)}</span>` : ""}
           ${i.aandachtsgebied ? `<span class="badge badge-aandachtsgebied">${escHtml(i.aandachtsgebied)}</span>` : ""}
         </div>
         <div class="card-wsjf">
           <div>
-            <div class="wsjf-score-big note-icon" data-note="${wsjfNote}">${wsjf.toFixed(1)}</div>
+            <div class="wsjf-score-big" data-note="${escHtml(wsjfTooltipText(i.wsjf))}">${wsjf.toFixed(1)}</div>
             <div class="wsjf-score-label">WSJF</div>
           </div>
           <div class="wsjf-breakdown">
@@ -1010,11 +1061,8 @@ function renderCards() {
           </div>
         </div>
         <div class="card-footer">
-          <div class="card-meta">${i.eigenaar ? escHtml(i.eigenaar) : ""} ${i.startdatum ? "· " + i.startdatum : ""}</div>
-          <div class="card-actions">
-            <button class="btn btn-ghost btn-sm" onclick="requirePin(()=>{ openBeheer(); openForm(${i.id}); })">✏️ Bewerken</button>
-            <button class="btn btn-danger btn-sm" onclick="requirePin(()=>confirmDelete(${i.id}))">🗑️</button>
-          </div>
+          <div class="card-meta">${meta}</div>
+          ${actionButtons(i)}
         </div>
       </div>
     </div>`;
@@ -1025,42 +1073,49 @@ function renderCards() {
 function renderTable() {
   const tbody = document.getElementById("table-body");
   const empty = document.getElementById("empty-tabel");
-  const filtered = getSorted(getFiltered());
-
-  if (!filtered.length) {
-    tbody.innerHTML = "";
-    empty.classList.remove("hidden");
+  const wrap = document.getElementById("table-wrap");
+  document.getElementById("initiatieven-table").classList.toggle("show-afgerond", scope === "afgerond");
+  const list = getSorted(getFiltered());
+  if (!list.length) {
+    tbody.innerHTML = ""; wrap.classList.add("hidden");
+    empty.innerHTML = emptyHtml(); empty.classList.remove("hidden");
     return;
   }
+  wrap.classList.remove("hidden");
   empty.classList.add("hidden");
 
-  tbody.innerHTML = filtered.map(i => {
+  tbody.innerHTML = list.map(i => {
     const wsjf = calcWsjf(i.wsjf);
-    const wsjfNote = escHtml(wsjfTooltipText(i.wsjf));
     const noteHtml = i.notitie ? `<span class="note-icon" data-note="${escHtml(i.notitie)}">💬</span>` : "";
+    const cls = [i.status === "Klaar" && scope !== "afgerond" ? "is-klaar" : "", i.id === flashId ? "flash" : ""].join(" ");
     return `
-    <tr>
+    <tr class="${cls}" onclick="openEdit(${i.id})">
       <td><div class="td-name">${escHtml(i.naam)} ${noteHtml}</div></td>
       <td><span class="badge ${statusClass(i.status)}">${escHtml(i.status)}</span></td>
-      <td><span class="badge badge-thema">${escHtml(i.thema || "")}</span></td>
+      <td>${i.thema ? `<span class="badge badge-thema">${escHtml(i.thema)}</span>` : "—"}</td>
       <td>${i.business_unit ? `<span class="badge badge-bu">${escHtml(i.business_unit)}</span>` : "—"}</td>
       <td>${i.aandachtsgebied ? `<span class="badge badge-aandachtsgebied">${escHtml(i.aandachtsgebied)}</span>` : "—"}</td>
       <td>${escHtml(i.eigenaar || "—")}</td>
-      <td><span class="wsjf-mono note-icon" data-note="${wsjfNote}">${wsjf.toFixed(1)}</span></td>
+      <td class="col-afgerond">${fmtDate(i.afgerond_op)}</td>
+      <td><span class="wsjf-mono" data-note="${escHtml(wsjfTooltipText(i.wsjf))}">${wsjf.toFixed(1)}</span></td>
+      <td class="col-actions">${actionButtons(i)}</td>
     </tr>`;
   }).join('');
 }
 
 function sortTable(col) {
-  if (sortCol === col) { sortDir = sortDir === "asc" ? "desc" : "asc"; }
-  else { sortCol = col; sortDir = col === "wsjf" ? "desc" : "asc"; }
-  ["naam","status","thema","business_unit","aandachtsgebied","eigenaar","wsjf"].forEach(c => {
+  if (sortCol === col) sortDir = sortDir === "asc" ? "desc" : "asc";
+  else { sortCol = col; sortDir = (col === "wsjf" || col === "afgerond_op") ? "desc" : "asc"; }
+  updateSortIcons();
+  renderAll();
+}
+function updateSortIcons() {
+  ["naam","status","thema","business_unit","aandachtsgebied","eigenaar","afgerond_op","wsjf"].forEach(c => {
     const th = document.getElementById("th-" + c);
     const si = document.getElementById("si-" + c);
     if (th) th.classList.toggle("sorted", c === sortCol);
     if (si) { si.classList.toggle("active", c === sortCol); si.textContent = c === sortCol ? (sortDir === "asc" ? "↑" : "↓") : "↕"; }
   });
-  renderTable();
 }
 
 // ─── VIEW ─────────────────────────────────────────────────────────────
@@ -1074,45 +1129,98 @@ function setView(v) {
 }
 
 function renderAll() {
-  renderStats();
+  gtt.style.opacity = "0";
+  renderScope();
   renderFilters();
+  renderStats();
   renderCards();
   renderTable();
 }
 
-// ─── PIN / BEVEILIGING ────────────────────────────────────────────────
-function getStoredPin() {
-  return localStorage.getItem("lpm_pin") || DEFAULT_PIN;
+function flash(id) {
+  flashId = id;
+  setTimeout(() => { if (flashId === id) flashId = null; }, 1700);
 }
 
+// ─── TOAST ────────────────────────────────────────────────────────────
+let toastTimer = null;
+function toast(msg, { type = "ok", actionLabel = null, onAction = null, duration = 2800 } = {}) {
+  const el = document.getElementById("toast");
+  const btn = document.getElementById("toast-action");
+  const bar = document.getElementById("toast-progress");
+  document.getElementById("toast-msg").textContent = msg;
+  el.classList.toggle("error", type === "error");
+  if (actionLabel) {
+    btn.textContent = actionLabel;
+    btn.classList.remove("hidden");
+    btn.onclick = () => { hideToast(); onAction && onAction(); };
+  } else {
+    btn.classList.add("hidden");
+    btn.onclick = null;
+  }
+  bar.style.transition = "none";
+  bar.style.width = "100%";
+  bar.style.display = actionLabel ? "block" : "none";
+  void bar.offsetWidth;
+  bar.style.transition = `width ${duration}ms linear`;
+  bar.style.width = "0%";
+  el.classList.add("visible");
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(hideToast, duration);
+}
+function hideToast() {
+  clearTimeout(toastTimer);
+  document.getElementById("toast").classList.remove("visible");
+}
+
+// ─── PIN / VERGRENDELING ──────────────────────────────────────────────
+function getStoredPin() { return local.getItem("lpm_pin") || DEFAULT_PIN; }
+
+function renderLock() {
+  const b = document.getElementById("btn-lock");
+  b.classList.toggle("unlocked", pinUnlocked);
+  b.innerHTML = pinUnlocked ? "🔓 <span class='hide-mobile'>Ontgrendeld</span>" : "🔒 <span class='hide-mobile'>Vergrendeld</span>";
+  b.title = pinUnlocked ? "Klik om bewerken weer te vergrendelen" : "Klik om bewerken te ontgrendelen";
+}
+function toggleLock() {
+  if (pinUnlocked) {
+    pinUnlocked = false;
+    session.removeItem("lpm_unlocked");
+    closeDrawers(true);
+    renderLock();
+    toast("Bewerken vergrendeld");
+  } else {
+    requirePin(() => toast("Ontgrendeld — je kunt nu bewerken"));
+  }
+}
+function requirePin(cb) {
+  if (pinUnlocked) { cb(); return; }
+  pinCallback = cb;
+  openPinModal();
+}
 function openPinModal() {
   pinBuffer = "";
   updatePinDots();
   document.getElementById("pin-error").textContent = "";
   document.getElementById("pin-modal").classList.add("visible");
 }
-
 function closePinModal() {
   document.getElementById("pin-modal").classList.remove("visible");
   pinBuffer = "";
+  pinCallback = null;
   updatePinDots();
 }
-
-function pinKey(digit) {
+function pinKey(d) {
   if (pinBuffer.length >= 4) return;
-  pinBuffer += digit;
+  pinBuffer += d;
   updatePinDots();
-  if (pinBuffer.length === 4) {
-    setTimeout(checkPin, 120);
-  }
+  if (pinBuffer.length === 4) setTimeout(checkPin, 120);
 }
-
 function pinClear() {
   pinBuffer = pinBuffer.slice(0, -1);
   updatePinDots();
   document.getElementById("pin-error").textContent = "";
 }
-
 function updatePinDots() {
   for (let i = 0; i < 4; i++) {
     const dot = document.getElementById("pd" + i);
@@ -1120,333 +1228,314 @@ function updatePinDots() {
     dot.classList.remove("error");
   }
 }
-
 function checkPin() {
   if (pinBuffer === getStoredPin()) {
-    closePinModal();
+    const cb = pinCallback;
     pinUnlocked = true;
-    if (pinCallback) { const cb = pinCallback; pinCallback = null; cb(); }
-    else openBeheer();
+    session.setItem("lpm_unlocked", "1");
+    renderLock();
+    closePinModal();
+    if (cb) cb();
   } else {
     for (let i = 0; i < 4; i++) document.getElementById("pd" + i).classList.add("error");
     document.getElementById("pin-error").textContent = "Onjuiste pincode";
     setTimeout(() => { pinBuffer = ""; updatePinDots(); document.getElementById("pin-error").textContent = ""; }, 800);
   }
 }
-
 function savePin() {
   const val = document.getElementById("new-pin").value.trim();
   const msg = document.getElementById("pin-save-msg");
-  if (!/^\d{4}$/.test(val)) {
-    msg.textContent = "Voer precies 4 cijfers in.";
-    msg.style.color = "var(--red)";
-    return;
-  }
-  localStorage.setItem("lpm_pin", val);
+  if (!/^\d{4}$/.test(val)) { msg.textContent = "Voer precies 4 cijfers in."; msg.style.color = "var(--red)"; return; }
+  local.setItem("lpm_pin", val);
   document.getElementById("new-pin").value = "";
   msg.textContent = "Pincode opgeslagen ✓";
   msg.style.color = "var(--green)";
   setTimeout(() => { msg.textContent = ""; }, 2500);
 }
 
+// ─── DRAWERS ──────────────────────────────────────────────────────────
+function showDrawer(id) {
+  document.querySelectorAll(".drawer").forEach(d => d.classList.toggle("open", d.id === id));
+  document.getElementById("drawer-backdrop").classList.add("visible");
+  document.body.classList.add("no-scroll");
+}
+function closeDrawers(force = false) {
+  const editOpen = document.getElementById("edit-drawer").classList.contains("open");
+  if (editOpen && formDirty && !force && !confirm("Je hebt niet-opgeslagen wijzigingen. Toch sluiten?")) return;
+  document.querySelectorAll(".drawer").forEach(d => d.classList.remove("open"));
+  document.getElementById("drawer-backdrop").classList.remove("visible");
+  document.body.classList.remove("no-scroll");
+  editingId = null;
+  formDirty = false;
+}
+function anyDrawerOpen() { return !!document.querySelector(".drawer.open"); }
+
 // ─── BEHEER ───────────────────────────────────────────────────────────
-function toggleBeheer() {
-  if (beheerOpen) {
-    beheerOpen = false;
-    pinUnlocked = false;
-    document.getElementById("beheer-panel").classList.add("hidden");
-    document.getElementById("btn-beheer").textContent = "⚙ Beheer";
-  } else {
-    openPinModal();
-  }
-}
-
 function openBeheer() {
-  beheerOpen = true;
-  document.getElementById("beheer-panel").classList.remove("hidden");
-  document.getElementById("btn-beheer").textContent = "✕ Sluiten";
-  renderBeheerList();
-  renderThemas();
-  renderAandachtsgebieden();
+  requirePin(() => {
+    renderThemas();
+    renderAandachtsgebieden();
+    showDrawer("beheer-drawer");
+  });
 }
-
 function setBeheerTab(tab) {
-  activeBeheerTab = tab;
-  ["initiatieven","themas","aandachtsgebieden","beveiliging"].forEach(t => {
-    document.getElementById("tab-" + t).classList.toggle("hidden", tab !== t);
-  });
-  document.querySelectorAll(".beheer-tab").forEach((el, i) => {
-    el.classList.toggle("active", ["initiatieven","themas","aandachtsgebieden","beveiliging"][i] === tab);
-  });
-  if (tab === "themas") renderThemas();
-  if (tab === "aandachtsgebieden") renderAandachtsgebieden();
-}
-
-function renderBeheerList() {
-  const list = document.getElementById("beheer-initiatieven-list");
-  list.innerHTML = portfolio.initiatieven.map(i => `
-    <div class="beheer-item">
-      <div class="beheer-item-info">
-        <span class="beheer-item-name">${escHtml(i.naam)}</span>
-        <span class="badge ${statusClass(i.status)}">${escHtml(i.status)}</span>
-        ${i.aandachtsgebied ? `<span class="badge badge-aandachtsgebied">${escHtml(i.aandachtsgebied)}</span>` : ""}
-      </div>
-      <div class="beheer-item-actions">
-        <button class="btn btn-secondary btn-sm" onclick="openForm(${i.id})">✏️ Bewerken</button>
-        <button class="btn btn-danger btn-sm" onclick="confirmDelete(${i.id})">🗑️ Verwijderen</button>
-      </div>
-    </div>
-  `).join('') || '<p style="color:var(--text-muted);font-size:13px;padding:8px 0;">Nog geen initiatieven. Voeg er een toe!</p>';
+  ["themas", "aandachtsgebieden", "beveiliging"].forEach(t =>
+    document.getElementById("tab-" + t).classList.toggle("hidden", tab !== t));
+  document.querySelectorAll(".beheer-tab").forEach(el => el.classList.toggle("active", el.dataset.tab === tab));
 }
 
 // ─── FORMULIER ────────────────────────────────────────────────────────
+function openEdit(id) { requirePin(() => openForm(id)); }
+
 function openForm(id) {
   editingId = id;
-  const form = document.getElementById("initiatief-form");
-  const title = document.getElementById("form-title");
-
-  // fill thema dropdown
   const selThema = document.getElementById("f-thema");
   selThema.innerHTML = portfolio.strategische_themas.map(t => `<option>${escHtml(t)}</option>`).join('');
-
-  // fill aandachtsgebied dropdown
   const selAG = document.getElementById("f-aandachtsgebied");
-  selAG.innerHTML = `<option value="">— Geen —</option>` +
-    portfolio.aandachtsgebieden.map(a => `<option>${escHtml(a)}</option>`).join('');
+  selAG.innerHTML = `<option value="">— Geen —</option>` + portfolio.aandachtsgebieden.map(a => `<option>${escHtml(a)}</option>`).join('');
+
+  const eyebrow = document.getElementById("form-eyebrow");
+  document.getElementById("drawer-delete").classList.toggle("hidden", id === null);
 
   if (id === null) {
-    title.textContent = "Nieuw initiatief";
-    document.getElementById("f-naam").value = "";
-    document.getElementById("f-omschrijving").value = "";
+    document.getElementById("form-title").textContent = "Nieuw initiatief";
+    eyebrow.textContent = "Toevoegen";
+    ["f-naam","f-omschrijving","f-eigenaar","f-bu","f-startdatum","f-notitie"].forEach(f => document.getElementById(f).value = "");
     document.getElementById("f-status").value = "Idee";
-    document.getElementById("f-eigenaar").value = "";
-    document.getElementById("f-bu").value = "";
-    document.getElementById("f-aandachtsgebied").value = "";
-    document.getElementById("f-startdatum").value = "";
-    document.getElementById("f-notitie").value = "";
+    selAG.value = filters.aandachtsgebied.length === 1 ? filters.aandachtsgebied[0] : "";
+    if (filters.thema !== "Alle") selThema.value = filters.thema;
     wsjfState = { bv: 5, tc: 5, rr: 5, js: 5 };
   } else {
     const i = portfolio.initiatieven.find(x => x.id === id);
-    title.textContent = "Initiatief bewerken";
+    if (!i) return;
+    document.getElementById("form-title").textContent = i.naam;
+    eyebrow.innerHTML = `Bewerken <span class="badge ${statusClass(i.status)}" style="text-transform:none;letter-spacing:0">${escHtml(i.status)}</span>` +
+      (i.status === "Klaar" && i.afgerond_op ? `<span style="text-transform:none;letter-spacing:0;font-weight:500">afgerond op ${fmtDate(i.afgerond_op)}</span>` : "");
     document.getElementById("f-naam").value = i.naam;
     document.getElementById("f-omschrijving").value = i.omschrijving || "";
     document.getElementById("f-status").value = i.status;
     document.getElementById("f-eigenaar").value = i.eigenaar || "";
     document.getElementById("f-bu").value = i.business_unit || "";
-    document.getElementById("f-aandachtsgebied").value = i.aandachtsgebied || "";
     document.getElementById("f-startdatum").value = i.startdatum || "";
     document.getElementById("f-notitie").value = i.notitie || "";
-    // snap to nearest fibonacci value
-    const snap = v => FIBONACCI.reduce((a, b) => Math.abs(b - v) < Math.abs(a - v) ? b : a);
-    wsjfState = {
-      bv: snap(i.wsjf.business_value),
-      tc: snap(i.wsjf.time_criticality),
-      rr: snap(i.wsjf.risk_reduction),
-      js: snap(i.wsjf.job_size),
-    };
     selThema.value = i.thema;
+    selAG.value = i.aandachtsgebied || "";
+    const snap = v => FIBONACCI.reduce((a, b) => Math.abs(b - v) < Math.abs(a - v) ? b : a);
+    wsjfState = { bv: snap(i.wsjf.business_value), tc: snap(i.wsjf.time_criticality), rr: snap(i.wsjf.risk_reduction), js: snap(i.wsjf.job_size) };
   }
-  // update val displays
+  document.getElementById("f-naam").style.borderColor = "";
   ["bv","tc","rr","js"].forEach(k => { document.getElementById("val-" + k).textContent = wsjfState[k]; });
   initFibButtons();
-  form.classList.remove("hidden");
-  form.scrollIntoView({ behavior: "smooth", block: "nearest" });
-}
-
-function closeForm() {
-  document.getElementById("initiatief-form").classList.add("hidden");
-  editingId = null;
+  formDirty = false;
+  document.querySelector("#edit-drawer .drawer-body").scrollTop = 0;
+  showDrawer("edit-drawer");
+  if (id === null) setTimeout(() => document.getElementById("f-naam").focus(), 260);
 }
 
 function initFibButtons() {
   ["bv","tc","rr","js"].forEach(key => {
-    const container = document.getElementById("fib-" + key);
-    container.innerHTML = FIBONACCI.map(n =>
+    document.getElementById("fib-" + key).innerHTML = FIBONACCI.map(n =>
       `<button type="button" class="fib-btn ${wsjfState[key] === n ? 'selected' : ''}" onclick="setFib('${key}',${n})">${n}</button>`
     ).join('');
   });
   updateWsjfCalc();
 }
-
 function setFib(key, val) {
   wsjfState[key] = val;
+  formDirty = true;
   document.getElementById("val-" + key).textContent = val;
-  document.querySelectorAll(`#fib-${key} .fib-btn`).forEach(btn => {
-    btn.classList.toggle("selected", +btn.textContent === val);
-  });
+  document.querySelectorAll(`#fib-${key} .fib-btn`).forEach(btn => btn.classList.toggle("selected", +btn.textContent === val));
   updateWsjfCalc();
 }
-
 function updateWsjfCalc() {
   const { bv, tc, rr, js } = wsjfState;
-  document.getElementById("calc-bv").textContent = bv;
-  document.getElementById("calc-tc").textContent = tc;
-  document.getElementById("calc-rr").textContent = rr;
-  document.getElementById("calc-js").textContent = js;
-  const score = Math.round(((bv + tc + rr) / js) * 10) / 10;
-  document.getElementById("form-wsjf-score").textContent = score.toFixed(1);
+  ["bv","tc","rr","js"].forEach(k => document.getElementById("calc-" + k).textContent = wsjfState[k]);
+  document.getElementById("form-wsjf-score").textContent = (Math.round(((bv + tc + rr) / js) * 10) / 10).toFixed(1);
 }
 
 function saveInitiatief() {
-  const naam = document.getElementById("f-naam").value.trim();
-  if (!naam) { document.getElementById("f-naam").focus(); document.getElementById("f-naam").style.borderColor = "var(--red)"; return; }
-  document.getElementById("f-naam").style.borderColor = "";
+  const naamEl = document.getElementById("f-naam");
+  const naam = naamEl.value.trim();
+  if (!naam) { naamEl.focus(); naamEl.style.borderColor = "var(--red)"; return; }
+  naamEl.style.borderColor = "";
 
+  const prev = editingId !== null ? portfolio.initiatieven.find(i => i.id === editingId) : null;
+  const status = document.getElementById("f-status").value;
   const data = {
     naam,
     omschrijving: document.getElementById("f-omschrijving").value.trim(),
-    status: document.getElementById("f-status").value,
+    status,
     eigenaar: document.getElementById("f-eigenaar").value.trim(),
     business_unit: document.getElementById("f-bu").value,
     aandachtsgebied: document.getElementById("f-aandachtsgebied").value,
     thema: document.getElementById("f-thema").value,
     startdatum: document.getElementById("f-startdatum").value,
     notitie: document.getElementById("f-notitie").value.trim(),
-    wsjf: {
-      business_value: wsjfState.bv,
-      time_criticality: wsjfState.tc,
-      risk_reduction: wsjfState.rr,
-      job_size: wsjfState.js,
-    }
+    afgerond_op: status === "Klaar" ? ((prev && prev.status === "Klaar" && prev.afgerond_op) || today()) : "",
+    wsjf: { business_value: wsjfState.bv, time_criticality: wsjfState.tc, risk_reduction: wsjfState.rr, job_size: wsjfState.js },
   };
+  if (prev && status === "Klaar" && prev.status !== "Klaar") data.vorige_status = prev.status;
 
-  if (editingId === null) {
-    const newId = portfolio.initiatieven.length ? Math.max(...portfolio.initiatieven.map(i => i.id)) + 1 : 1;
-    portfolio.initiatieven.push({ id: newId, ...data });
+  let id = editingId;
+  if (id === null) {
+    id = portfolio.initiatieven.length ? Math.max(...portfolio.initiatieven.map(i => i.id)) + 1 : 1;
+    portfolio.initiatieven.push({ id, ...data });
   } else {
-    const idx = portfolio.initiatieven.findIndex(i => i.id === editingId);
+    const idx = portfolio.initiatieven.findIndex(i => i.id === id);
     portfolio.initiatieven[idx] = { ...portfolio.initiatieven[idx], ...data };
   }
-  closeForm();
-  renderBeheerList();
+  closeDrawers(true);
+  flash(id);
   renderAll();
-  savePortfolioRemote();
+
+  const visible = getFiltered().some(i => i.id === id);
+  const isNew = prev === null;
+  savePortfolioRemote(true).then(ok => {
+    if (!ok) return;
+    if (!visible && status === "Klaar") {
+      toast(`“${naam}” afgerond en verplaatst naar Afgerond`, { actionLabel: "Bekijken", onAction: () => { setScope("afgerond"); flash(id); renderAll(); }, duration: 5000 });
+    } else if (!visible) {
+      toast(`${isNew ? "Toegevoegd" : "Opgeslagen"} — valt buiten de huidige filters`, { actionLabel: "Filters wissen", onAction: () => { clearAllFilters(); if (!inScope(portfolio.initiatieven.find(i => i.id === id))) setScope("alles"); }, duration: 5000 });
+    } else {
+      toast(isNew ? "Initiatief toegevoegd ✓" : "Wijzigingen opgeslagen ✓");
+    }
+  });
 }
 
-// ─── VERWIJDEREN ─────────────────────────────────────────────────────
-function confirmDelete(id) {
-  deleteId = id;
-  const i = portfolio.initiatieven.find(x => x.id === id);
-  document.getElementById("confirm-text").textContent = `Weet je zeker dat je "${i.naam}" wilt verwijderen? Deze actie kan niet ongedaan worden gemaakt.`;
-  document.getElementById("confirm-modal").classList.add("visible");
+// ─── SNELACTIES: afronden / heropenen / verwijderen (met undo) ───────
+function snapshot(id) {
+  const idx = portfolio.initiatieven.findIndex(i => i.id === id);
+  return { idx, item: JSON.parse(JSON.stringify(portfolio.initiatieven[idx])) };
 }
-function closeModal() {
-  document.getElementById("confirm-modal").classList.remove("visible");
-  deleteId = null;
-}
-function executeDelete() {
-  portfolio.initiatieven = portfolio.initiatieven.filter(i => i.id !== deleteId);
-  closeModal();
-  renderBeheerList();
+function restore({ idx, item }, exists = true) {
+  if (exists) {
+    const cur = portfolio.initiatieven.findIndex(i => i.id === item.id);
+    portfolio.initiatieven[cur] = item;
+  } else {
+    portfolio.initiatieven.splice(Math.min(idx, portfolio.initiatieven.length), 0, item);
+  }
+  flash(item.id);
   renderAll();
-  savePortfolioRemote();
+  savePortfolioRemote(true).then(ok => ok && toast("Ongedaan gemaakt"));
+}
+
+function markKlaar(id) {
+  requirePin(() => {
+    const snap = snapshot(id);
+    const i = portfolio.initiatieven[snap.idx];
+    i.vorige_status = i.status;
+    i.status = "Klaar";
+    i.afgerond_op = today();
+    renderAll();
+    savePortfolioRemote(true).then(ok => ok && toast(`🏁 “${i.naam}” afgerond`, {
+      actionLabel: "Ongedaan maken", duration: 6000, onAction: () => restore(snap),
+    }));
+  });
+}
+function reopen(id) {
+  requirePin(() => {
+    const snap = snapshot(id);
+    const i = portfolio.initiatieven[snap.idx];
+    i.status = i.vorige_status && i.vorige_status !== "Klaar" ? i.vorige_status : "Uitvoering";
+    i.afgerond_op = "";
+    delete i.vorige_status;
+    renderAll();
+    savePortfolioRemote(true).then(ok => ok && toast(`“${i.naam}” heropend als ${i.status}`, {
+      actionLabel: "Ongedaan maken", duration: 6000, onAction: () => restore(snap),
+    }));
+  });
+}
+function deleteInitiatief(id) {
+  if (id === null || id === undefined) return;
+  requirePin(() => {
+    const snap = snapshot(id);
+    portfolio.initiatieven.splice(snap.idx, 1);
+    closeDrawers(true);
+    renderAll();
+    savePortfolioRemote(true).then(ok => ok && toast(`“${snap.item.naam}” verwijderd`, {
+      actionLabel: "Ongedaan maken", duration: 7000, onAction: () => restore(snap, false),
+    }));
+  });
 }
 
 // ─── THEMA's ──────────────────────────────────────────────────────────
 function renderThemas() {
-  const list = document.getElementById("thema-list");
-  list.innerHTML = portfolio.strategische_themas.map((t, idx) => {
-    const inUse = portfolio.initiatieven.some(i => i.thema === t);
-    return `
-    <div class="thema-item">
+  document.getElementById("thema-list").innerHTML = portfolio.strategische_themas.map((t, idx) => {
+    const n = portfolio.initiatieven.filter(i => i.thema === t).length;
+    return `<div class="thema-item">
       <span style="font-size:14px">${escHtml(t)}</span>
-      <div style="display:flex;align-items:center;gap:8px">
-        ${inUse ? '<span style="font-size:11px;color:var(--text-muted)">In gebruik</span>' : ''}
-        <button class="btn btn-danger btn-sm" onclick="removeThema(${idx})" ${inUse ? 'title="Dit thema is in gebruik bij een of meer initiatieven"' : ''}>✕</button>
-      </div>
-    </div>`;
+      <div style="display:flex;align-items:center;gap:10px">
+        ${n ? `<span class="in-use">${n} in gebruik</span>` : ''}
+        <button class="icon-btn danger" onclick="removeThema(${idx})" data-note="Verwijderen">✕</button>
+      </div></div>`;
   }).join('') || '<p style="color:var(--text-muted);font-size:13px">Geen thema\'s gedefinieerd.</p>';
 }
-
 function addThema() {
   const input = document.getElementById("nieuw-thema");
   const val = input.value.trim();
   if (!val) return;
   if (portfolio.strategische_themas.includes(val)) { input.style.borderColor = "var(--orange)"; return; }
   portfolio.strategische_themas.push(val);
-  input.value = "";
-  input.style.borderColor = "";
-  renderThemas();
-  renderFilters();
-  const sel = document.getElementById("f-thema");
-  if (sel) sel.innerHTML = portfolio.strategische_themas.map(t => `<option>${escHtml(t)}</option>`).join('');
+  input.value = ""; input.style.borderColor = "";
+  renderThemas(); renderAll();
   savePortfolioRemote();
 }
-
 function removeThema(idx) {
   const t = portfolio.strategische_themas[idx];
-  const inUse = portfolio.initiatieven.some(i => i.thema === t);
-  if (inUse) {
-    if (!confirm(`Thema "${t}" is in gebruik bij een of meer initiatieven. Weet je zeker dat je het wilt verwijderen?`)) return;
-  }
+  if (portfolio.initiatieven.some(i => i.thema === t) &&
+      !confirm(`Thema "${t}" is in gebruik bij een of meer initiatieven. Weet je zeker dat je het wilt verwijderen?`)) return;
   portfolio.strategische_themas.splice(idx, 1);
-  renderThemas();
-  renderFilters();
+  if (filters.thema === t) filters.thema = "Alle";
+  renderThemas(); renderAll();
   savePortfolioRemote();
 }
 
 // ─── AANDACHTSGEBIEDEN ────────────────────────────────────────────────
 function renderAandachtsgebieden() {
-  const list = document.getElementById("aandachtsgebied-list");
-  list.innerHTML = portfolio.aandachtsgebieden.map((a, idx) => {
-    const inUse = portfolio.initiatieven.some(i => i.aandachtsgebied === a);
-    return `
-    <div class="thema-item">
+  document.getElementById("aandachtsgebied-list").innerHTML = portfolio.aandachtsgebieden.map((a, idx) => {
+    const n = portfolio.initiatieven.filter(i => i.aandachtsgebied === a).length;
+    return `<div class="thema-item">
       <span style="font-size:14px">${escHtml(a)}</span>
-      <div style="display:flex;align-items:center;gap:8px">
-        ${inUse ? '<span style="font-size:11px;color:var(--text-muted)">In gebruik</span>' : ''}
-        <button class="btn btn-danger btn-sm" onclick="removeAandachtsgebied(${idx})" ${inUse ? 'title="Dit aandachtsgebied is in gebruik bij een of meer initiatieven"' : ''}>✕</button>
-      </div>
-    </div>`;
+      <div style="display:flex;align-items:center;gap:10px">
+        ${n ? `<span class="in-use">${n} in gebruik</span>` : ''}
+        <button class="icon-btn danger" onclick="removeAandachtsgebied(${idx})" data-note="Verwijderen">✕</button>
+      </div></div>`;
   }).join('') || '<p style="color:var(--text-muted);font-size:13px">Geen aandachtsgebieden gedefinieerd.</p>';
 }
-
 function addAandachtsgebied() {
   const input = document.getElementById("nieuw-aandachtsgebied");
   const val = input.value.trim();
   if (!val) return;
   if (portfolio.aandachtsgebieden.includes(val)) { input.style.borderColor = "var(--orange)"; return; }
   portfolio.aandachtsgebieden.push(val);
-  input.value = "";
-  input.style.borderColor = "";
-  renderAandachtsgebieden();
-  renderFilters();
-  // update aandachtsgebied dropdown in form if open
-  const sel = document.getElementById("f-aandachtsgebied");
-  if (sel) {
-    sel.innerHTML = `<option value="">— Geen —</option>` +
-      portfolio.aandachtsgebieden.map(a => `<option>${escHtml(a)}</option>`).join('');
-  }
+  input.value = ""; input.style.borderColor = "";
+  renderAandachtsgebieden(); renderAll();
   savePortfolioRemote();
 }
-
 function removeAandachtsgebied(idx) {
   const a = portfolio.aandachtsgebieden[idx];
-  const inUse = portfolio.initiatieven.some(i => i.aandachtsgebied === a);
-  if (inUse) {
-    if (!confirm(`Aandachtsgebied "${a}" is in gebruik bij een of meer initiatieven. Weet je zeker dat je het wilt verwijderen?`)) return;
-  }
+  if (portfolio.initiatieven.some(i => i.aandachtsgebied === a) &&
+      !confirm(`Aandachtsgebied "${a}" is in gebruik bij een of meer initiatieven. Weet je zeker dat je het wilt verwijderen?`)) return;
   portfolio.aandachtsgebieden.splice(idx, 1);
-  // also clear from active filter
-  const fi = filters.aandachtsgebied.indexOf(a);
-  if (fi !== -1) filters.aandachtsgebied.splice(fi, 1);
-  renderAandachtsgebieden();
-  renderFilters();
+  filters.aandachtsgebied = filters.aandachtsgebied.filter(x => x !== a);
+  renderAandachtsgebieden(); renderAll();
   savePortfolioRemote();
 }
 
 // ─── VERCEL BLOB SYNC ─────────────────────────────────────────────────
-async function savePortfolioRemote() {
+async function savePortfolioRemote(silent = false) {
   try {
     const res = await fetch("/api/portfolio", {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(portfolio, null, 2),
     });
-    if (!res.ok) throw new Error(`Server fout ${res.status}`);
-    showSaveMsg("Opgeslagen ✓", "green");
-  } catch(e) {
-    showSaveMsg(`Opslaan mislukt: ${e.message}`, "red");
+    if (!res.ok) throw new Error(`server fout ${res.status}`);
+    if (!silent) toast("Opgeslagen ✓");
+    return true;
+  } catch (e) {
+    toast(`Opslaan mislukt: ${e.message}`, { type: "error", duration: 6000 });
+    return false;
   }
 }
 
@@ -1456,72 +1545,69 @@ function loadPortfolio(text) {
     if (data.strategische_themas) portfolio.strategische_themas = data.strategische_themas;
     if (data.aandachtsgebieden) portfolio.aandachtsgebieden = data.aandachtsgebieden;
     if (data.initiatieven) portfolio.initiatieven = data.initiatieven;
-    filters = { status: [], aandachtsgebied: [], thema: "Alle", bu: "Alle" };
+    // Migratie: oud veld "team" → "aandachtsgebied"
+    portfolio.initiatieven.forEach(i => {
+      if (i.team !== undefined) {
+        if (!i.aandachtsgebied && i.team) i.aandachtsgebied = i.team;
+        delete i.team;
+      }
+      if (i.aandachtsgebied && !portfolio.aandachtsgebieden.includes(i.aandachtsgebied)) {
+        portfolio.aandachtsgebieden.push(i.aandachtsgebied);
+      }
+    });
     renderAll();
-    if (beheerOpen) { renderBeheerList(); renderThemas(); renderAandachtsgebieden(); }
   } catch (e) {
-    showSaveMsg("Kon bestand niet laden: ongeldige JSON.", "red");
+    toast("Kon portfolio niet laden: ongeldige JSON.", { type: "error" });
   }
 }
 
-function showSaveMsg(msg, color) {
-  const el = document.getElementById("save-confirm");
-  el.textContent = msg;
-  el.style.color = color === "red" ? "var(--red)" : "var(--green)";
-  el.classList.add("visible");
-  setTimeout(() => { el.classList.remove("visible"); }, 3000);
-}
-
-// ─── UTIL ─────────────────────────────────────────────────────────────
-function escHtml(s) {
-  return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
-}
-
-// ─── REQUIRE PIN HELPER ───────────────────────────────────────────────
-let pinCallback = null;
-function requirePin(cb) {
-  if (pinUnlocked) { cb(); return; }
-  pinCallback = cb;
-  openPinModal();
-}
-
-document.getElementById("confirm-modal").addEventListener("click", function(e) {
-  if (e.target === this) closeModal();
-});
-document.getElementById("pin-modal").addEventListener("click", function(e) {
+// ─── EVENTS ───────────────────────────────────────────────────────────
+document.getElementById("pin-modal").addEventListener("click", function (e) {
   if (e.target === this) closePinModal();
 });
+document.getElementById("edit-drawer").addEventListener("input", () => { formDirty = true; });
 
-document.addEventListener("keydown", function(e) {
-  if (!document.getElementById("pin-modal").classList.contains("visible")) return;
-  if (e.key >= "0" && e.key <= "9") pinKey(e.key);
-  else if (e.key === "Backspace") pinClear();
-  else if (e.key === "Escape") closePinModal();
+document.addEventListener("keydown", function (e) {
+  if (document.getElementById("pin-modal").classList.contains("visible")) {
+    if (e.key >= "0" && e.key <= "9") pinKey(e.key);
+    else if (e.key === "Backspace") pinClear();
+    else if (e.key === "Escape") closePinModal();
+    return;
+  }
+  const editOpen = document.getElementById("edit-drawer").classList.contains("open");
+  if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === "s" && editOpen) {
+    e.preventDefault();
+    saveInitiatief();
+    return;
+  }
+  if (e.key === "Escape") {
+    if (anyDrawerOpen()) closeDrawers();
+    else if (document.activeElement.id === "search" && search) clearAllFilters();
+    return;
+  }
+  if (isTyping() || anyDrawerOpen() || e.metaKey || e.ctrlKey || e.altKey) return;
+  if (e.key === "/") { e.preventDefault(); document.getElementById("search").focus(); }
+  else if (e.key.toLowerCase() === "n") { e.preventDefault(); openEdit(null); }
 });
 
 // ─── GLOBAL TOOLTIP ──────────────────────────────────────────────────
 const gtt = document.getElementById("global-tooltip");
-document.addEventListener("mouseover", function(e) {
-  const icon = e.target.closest("[data-note]");
-  if (!icon) return;
-  gtt.textContent = icon.dataset.note;
+document.addEventListener("mouseover", function (e) {
+  const el = e.target.closest("[data-note]");
+  if (!el) return;
+  gtt.textContent = el.dataset.note;
   gtt.style.opacity = "1";
-  positionTooltip(icon);
+  positionTooltip(el);
 });
-document.addEventListener("mouseout", function(e) {
+document.addEventListener("mouseout", function (e) {
   if (!e.target.closest("[data-note]")) return;
   gtt.style.opacity = "0";
 });
-document.addEventListener("mousemove", function(e) {
-  if (gtt.style.opacity !== "1") return;
-  const icon = e.target.closest("[data-note]");
-  if (icon) positionTooltip(icon);
-});
-function positionTooltip(icon) {
-  const r = icon.getBoundingClientRect();
+function positionTooltip(el) {
+  const r = el.getBoundingClientRect();
   const tw = gtt.offsetWidth, th = gtt.offsetHeight;
   let top = r.top - th - 8;
-  let left = r.right - tw;
+  let left = r.left + r.width / 2 - tw / 2;
   if (top < 8) top = r.bottom + 8;
   if (left < 8) left = 8;
   if (left + tw > window.innerWidth - 8) left = window.innerWidth - tw - 8;
@@ -1529,100 +1615,25 @@ function positionTooltip(icon) {
   gtt.style.left = left + "px";
 }
 
-// ─── INIT ─────────────────────────────────────────────────────────────
+// ─── INIT (demo-data, wordt overschreven door centrale opslag) ───────
 portfolio.initiatieven = [
-  {
-    id: 1,
-    naam: "Digitaal onboarding platform",
-    omschrijving: "Vervanging van papieren onboardingproces door een volledig digitaal platform voor nieuwe medewerkers.",
-    status: "Uitvoering",
-    eigenaar: "Lisa de Vries",
-    business_unit: "Digitalisering",
-    aandachtsgebied: "EuA",
-    thema: "Digitalisering",
-    startdatum: "2025-02-01",
-    wsjf: { business_value: 8, time_criticality: 8, risk_reduction: 5, job_size: 5 },
-    notitie: "Go-live gepland voor Q3 2025. Afhankelijk van HR-systeem migratie."
-  },
-  {
-    id: 2,
-    naam: "CO₂-reductie meetinfrastructuur",
-    omschrijving: "Implementatie van real-time monitoring voor CO₂-uitstoot over alle locaties.",
-    status: "Analyse",
-    eigenaar: "Marc Janssen",
-    business_unit: "Energie uit Afval",
-    aandachtsgebied: "OPS",
-    thema: "Duurzaamheid",
-    startdatum: "2025-04-01",
-    wsjf: { business_value: 8, time_criticality: 8, risk_reduction: 8, job_size: 8 },
-    notitie: ""
-  },
-  {
-    id: 3,
-    naam: "AVG compliance audit",
-    omschrijving: "Volledige audit van gegevensverwerkingsprocessen conform nieuwe AVG-richtlijnen.",
-    status: "Uitvoering",
-    eigenaar: "Sarah Bos",
-    business_unit: "GGC",
-    aandachtsgebied: "Legal",
-    thema: "Compliance",
-    startdatum: "2025-01-15",
-    wsjf: { business_value: 8, time_criticality: 13, risk_reduction: 13, job_size: 5 },
-    notitie: "Deadline: 1 juli 2025 vanwege externe audit."
-  },
-  {
-    id: 4,
-    naam: "Veiligheidstraining verplicht",
-    omschrijving: "Jaarlijkse verplichte veiligheidstraining voor alle medewerkers op de werkvloer.",
-    status: "Klaar",
-    eigenaar: "Tom Bakker",
-    business_unit: "Energie uit Afval",
-    aandachtsgebied: "HR",
-    thema: "Veiligheid",
-    startdatum: "2025-01-01",
-    wsjf: { business_value: 5, time_criticality: 8, risk_reduction: 8, job_size: 3 },
-    notitie: ""
-  },
-  {
-    id: 5,
-    naam: "Process mining implementatie",
-    omschrijving: "Gebruik van process mining tools om knelpunten in operationele processen te identificeren.",
-    status: "Idee",
-    eigenaar: "Anna Smit",
-    business_unit: "GGC",
-    aandachtsgebied: "EuA",
-    thema: "Operational Excellence",
-    startdatum: "",
-    wsjf: { business_value: 5, time_criticality: 3, risk_reduction: 3, job_size: 8 },
-    notitie: "Verkenningsfase — budget nog niet goedgekeurd."
-  },
-  {
-    id: 6,
-    naam: "Single Sign-On uitrol",
-    omschrijving: "Centrale authenticatie voor alle interne applicaties via SSO-platform.",
-    status: "Goedgekeurd",
-    eigenaar: "Kevin Hoek",
-    business_unit: "Digitalisering",
-    aandachtsgebied: "IT",
-    thema: "Digitalisering",
-    startdatum: "2025-03-01",
-    wsjf: { business_value: 8, time_criticality: 5, risk_reduction: 8, job_size: 5 },
-    notitie: ""
-  }
+  { id: 1, naam: "Digitaal onboarding platform", omschrijving: "Vervanging van papieren onboardingproces door een volledig digitaal platform voor nieuwe medewerkers.", status: "Uitvoering", eigenaar: "Lisa de Vries", business_unit: "Digitalisering", aandachtsgebied: "EuA", thema: "Digitalisering", startdatum: "2025-02-01", wsjf: { business_value: 8, time_criticality: 8, risk_reduction: 5, job_size: 5 }, notitie: "Go-live gepland voor Q3 2025. Afhankelijk van HR-systeem migratie." },
+  { id: 2, naam: "CO₂-reductie meetinfrastructuur", omschrijving: "Implementatie van real-time monitoring voor CO₂-uitstoot over alle locaties.", status: "Analyse", eigenaar: "Marc Janssen", business_unit: "Energie uit Afval", aandachtsgebied: "OPS", thema: "Duurzaamheid", startdatum: "2025-04-01", wsjf: { business_value: 8, time_criticality: 8, risk_reduction: 8, job_size: 8 }, notitie: "" },
+  { id: 3, naam: "AVG compliance audit", omschrijving: "Volledige audit van gegevensverwerkingsprocessen conform nieuwe AVG-richtlijnen.", status: "Uitvoering", eigenaar: "Sarah Bos", business_unit: "GGC", aandachtsgebied: "Legal", thema: "Compliance", startdatum: "2025-01-15", wsjf: { business_value: 8, time_criticality: 13, risk_reduction: 13, job_size: 5 }, notitie: "Deadline: 1 juli 2025 vanwege externe audit." },
+  { id: 4, naam: "Veiligheidstraining verplicht", omschrijving: "Jaarlijkse verplichte veiligheidstraining voor alle medewerkers op de werkvloer.", status: "Klaar", afgerond_op: "2025-03-20", eigenaar: "Tom Bakker", business_unit: "Energie uit Afval", aandachtsgebied: "HR", thema: "Veiligheid", startdatum: "2025-01-01", wsjf: { business_value: 5, time_criticality: 8, risk_reduction: 8, job_size: 3 }, notitie: "" },
+  { id: 5, naam: "Process mining implementatie", omschrijving: "Gebruik van process mining tools om knelpunten in operationele processen te identificeren.", status: "Idee", eigenaar: "Anna Smit", business_unit: "GGC", aandachtsgebied: "EuA", thema: "Operational Excellence", startdatum: "", wsjf: { business_value: 5, time_criticality: 3, risk_reduction: 3, job_size: 8 }, notitie: "Verkenningsfase — budget nog niet goedgekeurd." },
+  { id: 6, naam: "Single Sign-On uitrol", omschrijving: "Centrale authenticatie voor alle interne applicaties via SSO-platform.", status: "Goedgekeurd", eigenaar: "Kevin Hoek", business_unit: "Digitalisering", aandachtsgebied: "IT", thema: "Digitalisering", startdatum: "2025-03-01", wsjf: { business_value: 8, time_criticality: 5, risk_reduction: 8, job_size: 5 }, notitie: "" },
 ];
 
+renderLock();
 renderAll();
 
-// Auto-load bij opstarten
 (async () => {
   try {
     const res = await fetch("/api/portfolio", { cache: "no-store" });
     if (!res.ok) return;
-    const text = await res.text();
-    loadPortfolio(text);
-  } catch(e) {
-    // demo-data blijft staan als API niet beschikbaar is
-  }
+    loadPortfolio(await res.text());
+  } catch (e) { /* demo-data blijft staan */ }
 })();
 </script>
 </body>

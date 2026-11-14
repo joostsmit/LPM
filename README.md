@@ -6,8 +6,11 @@ Een lichtgewicht portfolio management tool voor het bijhouden en prioriteren van
 
 - **Tabel- en kaartweergave** van alle initiatieven
 - **WSJF-scoring** (Weighted Shortest Job First) op basis van de Fibonacci-reeks
-- **Filters** op status, strategisch thema en business unit
-- **Beheer** van initiatieven en thema's, beveiligd met pincode
+- **Actief / Afgerond / Alles** — afgeronde initiatieven staan apart, met afrondingsdatum
+- **Direct bewerken** vanuit het overzicht: klik op een rij of kaart, of gebruik de snelacties (bewerken, afronden/heropenen, verwijderen) met *ongedaan maken*
+- **Zoeken en filteren** op status, aandachtsgebied (meerdere tegelijk), strategisch thema en business unit
+- **Beheer** van thema's en aandachtsgebieden; bewerken is beveiligd met een pincode
+- **Sneltoetsen**: `N` nieuw initiatief, `/` zoeken, `⌘S` opslaan, `Esc` sluiten
 - **Centrale opslag** via Vercel Blob — alle gebruikers zien altijd dezelfde data
 
 ## Statussen
