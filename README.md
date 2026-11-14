@@ -6,10 +6,13 @@ Een lichtgewicht portfolio management tool voor het bijhouden en prioriteren van
 
 - **Tabel- en kaartweergave** van alle initiatieven
 - **WSJF-scoring** (Weighted Shortest Job First) op basis van de Fibonacci-reeks
+- **Portfoliostroom** — aantallen per fase (Idee → Uitvoering → Afgerond), klikbaar als filter
+- **Prioriteitsrangorde** op WSJF met score-balk; bij het scoren zie je live op welke plek een initiatief belandt
 - **Actief / Afgerond / Alles** — afgeronde initiatieven staan apart, met afrondingsdatum
-- **Direct bewerken** vanuit het overzicht: klik op een rij of kaart, of gebruik de snelacties (bewerken, afronden/heropenen, verwijderen) met *ongedaan maken*
-- **Zoeken en filteren** op status, aandachtsgebied (meerdere tegelijk), strategisch thema en business unit
-- **Beheer** van thema's en aandachtsgebieden; bewerken is beveiligd met een pincode
+- **Direct bewerken** vanuit het overzicht: klik op een rij of kaart, wijzig de status via het statuslabel, of gebruik de snelacties — alles met *ongedaan maken*
+- **Zoeken en filteren** op aandachtsgebied, thema en business unit (meerdere waarden tegelijk)
+- **Beheer** van aandachtsgebieden, thema's en business units, inclusief hernoemen (werkt door in alle initiatieven); bewerken is beveiligd met een pincode
+- **Veilig laden** — als de centrale opslag niet bereikbaar is, wordt bewerken geblokkeerd zodat er nooit data overschreven wordt
 - **Sneltoetsen**: `N` nieuw initiatief, `/` zoeken, `⌘S` opslaan, `Esc` sluiten
 - **Centrale opslag** via Vercel Blob — alle gebruikers zien altijd dezelfde data
 
